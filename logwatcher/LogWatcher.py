@@ -87,7 +87,7 @@ def search_files(directory, regex):
                 with open(filepath, 'r', errors='ignore') as f:
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
-                            logger.debug(f"Matched by: {pattern.pattern} in file: {filepath}, line: {line_num}")
+                            logger.debug(f"Matched by: {pattern.pattern} in {filepath}:{line_num}")
                             
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
@@ -96,6 +96,8 @@ def search_files(directory, regex):
                             truncated_line = full_line[:200]
                             email_entry = f"{filepath}:{line_num}:{truncated_line}"
                             matches.append(email_entry)
+
+                            break
 
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
