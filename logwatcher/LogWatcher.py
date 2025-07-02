@@ -91,11 +91,31 @@ def search_files(directory, regex):
                 logger.error(f"Error reading {filepath}: {e}")
     return matches
 
+def load_patterns():
+    pattern_dir = os.path.join(BASE_DIR, "pattern")
+    default_file = os.path.join(pattern_dir, "defaultpattern")
+    custom_file = os.path.join(pattern_dir, "custompattern")
+    
+    patterns = set()
+    for file_path in [default_file, custom_file]:
+        try:
+            with open(file_path, 'r') as f:
+                for line in f:
+                    cleaned = line.strip()
+                    if cleaned and not cleaned.startswith("#"):
+                        patterns.add(cleaned)
+        except FileNotFoundError:
+            logger.warning(f"Pattern file not found: {file_path}")
+        except Exception as e:
+            logger.error(f"Error reading pattern file {file_path}: {e}")
+
+    return "|".join(patterns)  # regex OR
+
 def main_loop():
     while True:
         config = load_config()
         directory = config.get("directory")
-        patterns = config.get("patterns", "")
+        patterns = load_patterns()
         emails = config.get("emails", "").split(',')
 
         if not directory or not patterns or not emails:
