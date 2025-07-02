@@ -9,19 +9,29 @@ from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
-LOG_FILE = os.path.join(BASE_DIR, "LogWatcher.log")
-SCAN_INTERVAL = 600  # 10 minutes
+# Setup logging
+LOG_DIR = os.path.join(BASE_DIR, "log")
+os.makedirs(LOG_DIR, exist_ok=True)
 
-# Setup logging with 5MB cap and truncation
-logger = logging.getLogger()
+LOG_FILE = os.path.join(LOG_DIR, "LogWatcher.log")
+MATCH_LOG_FILE = os.path.join(LOG_DIR, "matches.log")
+
+logger = logging.getLogger("LogWatcher")
 logger.setLevel(logging.INFO)
 
-log_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=0, mode='w')
-log_format = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-log_handler.setFormatter(log_format)
-logger.addHandler(log_handler)
+# Main operational log (5 MB, no rotation)
+op_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=0, mode='w')
+op_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+# Match log (10 MB, no rotation)
+match_logger = logging.getLogger("MatchLogger")
+match_logger.setLevel(logging.INFO)
+match_handler = RotatingFileHandler(MATCH_LOG_FILE, maxBytes=10*1024*1024, backupCount=0, mode='w')
+match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+
+logger.addHandler(op_handler)
+match_logger.addHandler(match_handler)
+
 
 def load_config():
     config = {}
@@ -70,7 +80,9 @@ def search_files(directory, regex):
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
                             truncated_line = line.strip()[:200]
-                            matches.append(f"{filepath}:{line_num}:{truncated_line}")
+                            match_entry = f"{filepath}:{line_num}:{truncated_line}"
+                            matches.append(match_entry)
+                            match_logger.info(line)
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
     return matches
