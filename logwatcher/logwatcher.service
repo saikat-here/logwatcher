@@ -1,0 +1,12 @@
+[Unit]
+Description=LogWatcher Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/LogWatcher/LogWatcher.py
+WorkingDirectory=/opt/LogWatcher
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
