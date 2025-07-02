@@ -18,6 +18,8 @@ os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, "LogWatcher.log")
 MATCH_LOG_FILE = os.path.join(LOG_DIR, "matches.log")
 
+CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
+
 logger = logging.getLogger("LogWatcher")
 logger.setLevel(logging.INFO)
 
