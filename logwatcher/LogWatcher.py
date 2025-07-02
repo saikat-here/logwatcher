@@ -9,6 +9,8 @@ from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
 
+BASE_DIR = "/opt/LogWatcher"
+
 # Setup logging
 LOG_DIR = os.path.join(BASE_DIR, "log")
 os.makedirs(LOG_DIR, exist_ok=True)
