@@ -56,11 +56,11 @@ echo "📂 Creating pattern directory..."
 sudo mkdir -p "$INSTALL_DIR/pattern"
 
 # custompattern: create only if missing
-if [ ! -f "$INSTALL_DIR/pattern/custompattern" ]; then
-    sudo touch "$INSTALL_DIR/pattern/custompattern"
+if [ ! -f "$INSTALL_DIR/pattern/custompattern.txt" ]; then
+    sudo touch "$INSTALL_DIR/pattern/custompattern.txt"
     echo "✅ custompattern created"
 else
-    echo "⚠️  custompattern already exists, skipping"
+    echo "⚠️  custompattern already exists, preserving that"
 fi
 
 echo "🔧 Making LogWatcher.py executable..."
