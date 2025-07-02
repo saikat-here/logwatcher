@@ -5,70 +5,63 @@ REPO_URL="https://github.com/saikat-here/logwatcher.git"
 CLONE_DIR="/tmp/logwatcher"
 INSTALL_DIR="/opt/LogWatcher"
 SERVICE_NAME="logwatcher"
-SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
+SERVICE_FILE="logwatcher.service"
+SYSTEMD_PATH="/etc/systemd/system/$SERVICE_FILE"
 
-# Detect Python 3 binary
-PYTHON_BIN=$(command -v python3 || true)
+# Detect Python 3
+PYTHON_BIN=$(command -v python3)
 if [ -z "$PYTHON_BIN" ]; then
-    echo "❌ Python3 is not installed. Please install Python 3 to continue."
+    echo "❌ Python 3 is required but not found. Exiting."
     exit 1
 fi
 
 function uninstall() {
-    echo "🛑 Stopping and disabling $SERVICE_NAME service..."
+    echo "🛑 Stopping $SERVICE_NAME service..."
     sudo systemctl stop "$SERVICE_NAME" || true
     sudo systemctl disable "$SERVICE_NAME" || true
-
-    echo "🧹 Cleaning up installation..."
+    echo "🧹 Removing files..."
     sudo rm -rf "$INSTALL_DIR"
-    sudo rm -f "$SERVICE_FILE"
-
-    echo "🔄 Reloading systemd..."
+    sudo rm -f "$SYSTEMD_PATH"
     sudo systemctl daemon-reexec
     sudo systemctl daemon-reload
-
-    echo "✅ LogWatcher uninstalled."
+    echo "✅ Uninstalled LogWatcher."
     exit 0
 }
 
-# Handle uninstall option
 if [[ "$1" == "--uninstall" ]]; then
     uninstall
 fi
 
-echo "🔽 Cloning the repository..."
+echo "🔽 Cloning repository..."
 rm -rf "$CLONE_DIR"
 git clone "$REPO_URL" "$CLONE_DIR"
 
-echo "📁 Installing to $INSTALL_DIR..."
-sudo mkdir -p "$INSTALL_DIR"
+echo "📁 Creating install directory..."
+sudo mkdir -p "$INSTALL_DIR/log"
 
-echo "📄 Copying files to $INSTALL_DIR"
+echo "📄 Copying files (preserving config.txt if present)..."
 for file in "$CLONE_DIR/logwatcher/"*; do
     filename=$(basename "$file")
     if [[ "$filename" == "config.txt" && -f "$INSTALL_DIR/config.txt" ]]; then
-        echo "⚠️  Skipping existing config.txt (preserved)"
+        echo "⚠️  Skipping existing config.txt"
         continue
     fi
     sudo cp "$file" "$INSTALL_DIR/"
 done
 
+echo "🔧 Making LogWatcher.py executable..."
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
 
-echo "🔧 Updating systemd service file..."
-# Replace hardcoded python3 path with actual detected path
-sudo sed -i "s|^ExecStart=.*|ExecStart=$PYTHON_BIN $INSTALL_DIR/LogWatcher.py|" "$INSTALL_DIR/logwatcher.service"
+echo "🔧 Updating ExecStart with detected Python path..."
+sudo sed -i "s|^ExecStart=.*|ExecStart=$PYTHON_BIN $INSTALL_DIR/LogWatcher.py|" "$INSTALL_DIR/$SERVICE_FILE"
 
 echo "🔗 Installing service..."
-sudo cp "$INSTALL_DIR/logwatcher.service" "$SERVICE_FILE"
+sudo cp "$INSTALL_DIR/$SERVICE_FILE" "$SYSTEMD_PATH"
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE_NAME"
-sudo systemctl start "$SERVICE_NAME"
 
-echo "🔄 Restarting logwatcher service to apply changes..."
-sudo systemctl restart logwatcher
-echo "✅ LogWatcher service restarted successfully."
+echo "🔄 Restarting service to apply updates..."
+sudo systemctl restart "$SERVICE_NAME"
 
-echo "✅ LogWatcher installed and running with $PYTHON_BIN"
-
+echo "✅ LogWatcher is up and running."
