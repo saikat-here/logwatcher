@@ -93,8 +93,8 @@ def search_files(directory, regex):
 
 def load_patterns():
     pattern_dir = os.path.join(BASE_DIR, "pattern")
-    default_file = os.path.join(pattern_dir, "defaultpattern")
-    custom_file = os.path.join(pattern_dir, "custompattern")
+    default_file = os.path.join(pattern_dir, "defaultpattern.txt")
+    custom_file = os.path.join(pattern_dir, "custompattern.txt")
     
     patterns = set()
     for file_path in [default_file, custom_file]:
