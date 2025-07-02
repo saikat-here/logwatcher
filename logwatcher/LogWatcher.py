@@ -117,6 +117,8 @@ def load_patterns():
 
 def main_loop():
     while True:
+        start_time = time.time()
+        
         config = load_config()
         directory = config.get("directory")
         patterns = load_patterns()
@@ -157,7 +159,9 @@ def main_loop():
                 body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
 
             send_email("LogWatcher Alert", body, emails)
-
+        elapsed = time.time() - start_time
+        logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
+        
         time.sleep(SCAN_INTERVAL)
 
 if __name__ == "__main__":
