@@ -19,3 +19,44 @@
 -----BEGIN EC PRIVATE KEY-----
 -----BEGIN DSA PRIVATE KEY-----
 -----BEGIN PGP PRIVATE KEY BLOCK-----
+
+# HTTP request traces with secrets
+GET\s+/.*(token|auth|key|password)=\S{6,}
+POST\s+/.*(token|auth|key|password)=\S{6,}
+
+# Leakage via headers / cookies / request params
+Set-Cookie:\s*.*(sessionid|token|auth|sid)=\S{10,}
+Cookie:\s*.*(sessionid|token|auth)=\S{10,}
+
+# Leakage via logs or tracebacks
+Traceback \(most recent call last\):
+File\s+".*", line \d+, in .*
+Exception: .*(password|token|secret|auth).*
+
+# Secrets in variable names / environment dumps
+(?i)(jwt|bearer)[\s:=>]+\S{10,}
+(?i)(client[_\-]?secret|client[_\-]?id)[\s:=\[\]>]+\S{6,}
+(?i)(session[_\-]?id|sessionid|sid)[\s:=\[\]>]+\S{8,}
+(?i)(auth|login|admin)[\s:=\[\]>]+\S{6,}
+(?i)(db[_\-]?password|db[_\-]?user|db[_\-]?token)[\s:=\[\]>]+\S{6,}
+
+# Exposed JSON keys or logs with embedded secrets
+"password"\s*:\s*"(?!\*{3,}|x{3,}|null)[^"]{4,}"
+"access_token"\s*:\s*"[A-Za-z0-9\-_=]{10,}"
+"api_key"\s*:\s*"[A-Za-z0-9\-_=]{10,}"
+"user"\s*:\s*"[a-zA-Z0-9._-]{3,}"
+
+# Exposed XML Keys or Logs with Embedded Secrets
+<password>[^<*xX]{4,}</password>
+<pwd>[^<*xX]{4,}</pwd>
+<secret>[^<*xX]{4,}</secret>
+<token>[^<*xX]{10,}</token>
+<authToken>[^<*xX]{10,}</authToken>
+<apiKey>[^<*xX]{10,}</apiKey>
+<accessToken>[^<*xX]{10,}</accessToken>
+<clientSecret>[^<*xX]{6,}</clientSecret>
+<sessionId>[^<*xX]{6,}</sessionId>
+<auth>[^<*xX]{6,}</auth>
+<authorization>[^<*xX]{6,}</authorization>
+<privateKey>[^<]{20,}</privateKey>
+<email>[^<\s]+@[^<\s]+\.[a-zA-Z]{2,}</email>
