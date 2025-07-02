@@ -42,7 +42,17 @@ git clone "$REPO_URL" "$CLONE_DIR"
 
 echo "📁 Installing to $INSTALL_DIR..."
 sudo mkdir -p "$INSTALL_DIR"
-sudo cp "$CLONE_DIR/logwatcher/"* "$INSTALL_DIR"
+
+echo "📄 Copying files to $INSTALL_DIR"
+for file in "$CLONE_DIR/logwatcher/"*; do
+    filename=$(basename "$file")
+    if [[ "$filename" == "config.txt" && -f "$INSTALL_DIR/config.txt" ]]; then
+        echo "⚠️  Skipping existing config.txt (preserved)"
+        continue
+    fi
+    sudo cp "$file" "$INSTALL_DIR/"
+done
+
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
 
 echo "🔧 Updating systemd service file..."
