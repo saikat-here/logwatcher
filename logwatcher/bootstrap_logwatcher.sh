@@ -40,7 +40,7 @@ echo "📁 Creating install directory..."
 sudo mkdir -p "$INSTALL_DIR/log"
 
 echo "Stoping service to apply updates..."
-sudo systemctl restart "$SERVICE_NAME"
+sudo systemctl stop "$SERVICE_NAME"
 
 echo "📄 Copying files (preserving config.txt if present)..."
 for file in "$CLONE_DIR/logwatcher/"*; do
@@ -49,7 +49,7 @@ for file in "$CLONE_DIR/logwatcher/"*; do
         echo "⚠️  Skipping existing config.txt"
         continue
     fi
-    sudo cp "$file" "$INSTALL_DIR/"
+    sudo cp -f "$file" "$INSTALL_DIR/"
 done
 
 echo "🔧 Making LogWatcher.py executable..."
