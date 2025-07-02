@@ -45,17 +45,20 @@ sudo systemctl stop "$SERVICE_NAME"
 echo "📄 Copying files (preserving config.txt if present)..."
 for file in "$CLONE_DIR/logwatcher/"*; do
     filename=$(basename "$file")
+    
     if [[ "$filename" == "config.txt" && -f "$INSTALL_DIR/config.txt" ]]; then
         echo "⚠️  Skipping existing config.txt"
         continue
     fi
+
     if [ -d "$file" ]; then
+        echo "📂 Copying directory: $filename"
         sudo cp -rf "$file" "$INSTALL_DIR/"
     else
         sudo cp -f "$file" "$INSTALL_DIR/"
     fi
-
 done
+
 
 echo "📂 Creating pattern directory..."
 sudo mkdir -p "$INSTALL_DIR/pattern"
