@@ -66,4 +66,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE_NAME"
 sudo systemctl start "$SERVICE_NAME"
 
+echo "🔄 Restarting logwatcher service to apply changes..."
+sudo systemctl restart logwatcher
+echo "✅ LogWatcher service restarted successfully."
+
 echo "✅ LogWatcher installed and running with $PYTHON_BIN"
+
