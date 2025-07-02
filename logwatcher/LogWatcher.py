@@ -90,8 +90,13 @@ def main_loop():
         results = search_files(directory, regex)
 
         if results:
-            body = "The following lines matched your pattern:\n\n" + "\n".join(results)
-            send_email("LogWatcher Alert", body, emails)
+            MAX_LINES = 100  # send only first 100 matches
+            trimmed_results = results[:MAX_LINES]
+            body = "The following lines matched your pattern:\n\n" + "\n".join(trimmed_results)
+
+            if len(results) > MAX_LINES:
+                body += f"\n\n...and {len(results) - MAX_LINES} more lines were skipped to reduce email size."
+                send_email("LogWatcher Alert", body, emails)
 
         time.sleep(SCAN_INTERVAL)
 
