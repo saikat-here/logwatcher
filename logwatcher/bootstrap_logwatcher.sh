@@ -49,7 +49,12 @@ for file in "$CLONE_DIR/logwatcher/"*; do
         echo "⚠️  Skipping existing config.txt"
         continue
     fi
-    sudo cp -f "$file" "$INSTALL_DIR/"
+    if [ -d "$file" ]; then
+        sudo cp -rf "$file" "$INSTALL_DIR/"
+    else
+        sudo cp -f "$file" "$INSTALL_DIR/"
+    fi
+
 done
 
 echo "📂 Creating pattern directory..."
