@@ -68,7 +68,8 @@ def search_files(directory, regex):
                 with open(filepath, 'r', errors='ignore') as f:
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
-                            matches.append(f"{filepath}:{line_num}: {line.strip()}")
+                            truncated_line = line.strip()[:100]
+                            matches.append(f"{filepath}:{line_num}: {truncated_line}")
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
     return matches
