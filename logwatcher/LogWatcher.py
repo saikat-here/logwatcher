@@ -61,13 +61,12 @@ def search_files(directory, regex):
     matches = []
     pattern = re.compile(regex, re.IGNORECASE)
 
-for root, _, files in os.walk(directory):
-    for file in files:
-        filepath = os.path.join(root, file)
-        logger.info(f"Parsing file: {filepath}")
-        try:
-            with open(filepath, 'r', errors='ignore') as f:
-
+    for root, _, files in os.walk(directory):
+        for file in files:
+            filepath = os.path.join(root, file)
+            logger.info(f"Parsing file: {filepath}")
+            try:
+                with open(filepath, 'r', errors='ignore') as f:
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
                             truncated_line = line.strip()[:100]
