@@ -21,7 +21,7 @@ MATCH_LOG_FILE = os.path.join(LOG_DIR, "matches.log")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
 
 logger = logging.getLogger("LogWatcher")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 # Main operational log (5 MB, no rotation)
 op_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=0, mode='w')
@@ -87,6 +87,8 @@ def search_files(directory, regex):
                 with open(filepath, 'r', errors='ignore') as f:
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
+                            logger.debug(f"Matched by: {pattern.pattern} in file: {filepath}, line: {line_num}")
+                            
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(match_log_entry)
