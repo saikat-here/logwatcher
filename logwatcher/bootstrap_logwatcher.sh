@@ -52,6 +52,17 @@ for file in "$CLONE_DIR/logwatcher/"*; do
     sudo cp -f "$file" "$INSTALL_DIR/"
 done
 
+echo "📂 Creating pattern directory..."
+sudo mkdir -p "$INSTALL_DIR/pattern"
+
+# custompattern: create only if missing
+if [ ! -f "$INSTALL_DIR/pattern/custompattern" ]; then
+    sudo touch "$INSTALL_DIR/pattern/custompattern"
+    echo "✅ custompattern created"
+else
+    echo "⚠️  custompattern already exists, skipping"
+fi
+
 echo "🔧 Making LogWatcher.py executable..."
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
 
