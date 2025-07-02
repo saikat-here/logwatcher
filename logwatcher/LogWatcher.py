@@ -7,6 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
+from collections import defaultdict
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
@@ -47,7 +48,6 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     msg['Reply-To'] = sender
     msg['X-Priority'] = '3'
     msg['X-Mailer'] = 'Python Email Client'
-
     msg.set_content(body)
 
     try:
@@ -69,8 +69,8 @@ def search_files(directory, regex):
                 with open(filepath, 'r', errors='ignore') as f:
                     for line_num, line in enumerate(f, 1):
                         if pattern.search(line):
-                            truncated_line = line.strip()[:100]
-                            matches.append(f"{filepath}:{line_num}: {truncated_line}")
+                            truncated_line = line.strip()[:200]
+                            matches.append(f"{filepath}:{line_num}:{truncated_line}")
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
     return matches
@@ -91,13 +91,32 @@ def main_loop():
         results = search_files(directory, regex)
 
         if results:
-            MAX_LINES = 100  # send only first 100 matches
-            trimmed_results = results[:MAX_LINES]
-            body = "The following lines matched your pattern:\n\n" + "\n".join(trimmed_results)
+            MAX_LINES = 100
+            MAX_LINE_LENGTH = 200
+
+            grouped = defaultdict(list)
+            match_count = 0
+
+            for match in results:
+                if match_count >= MAX_LINES:
+                    break
+                try:
+                    file_path, line_num, line_content = match.split(":", 2)
+                    grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
+                    match_count += 1
+                except ValueError:
+                    logger.warning(f"Skipping malformed match line: {match}")
+
+            body = "The following lines matched your pattern:\n\n"
+            for file_path, lines in grouped.items():
+                body += f"\n📄 File: {file_path}\n"
+                body += "\n".join(f"  {line}" for line in lines)
+                body += "\n"
 
             if len(results) > MAX_LINES:
-                body += f"\n\n...and {len(results) - MAX_LINES} more lines were skipped to reduce email size."
-                send_email("LogWatcher Alert", body, emails)
+                body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
+
+            send_email("LogWatcher Alert", body, emails)
 
         time.sleep(SCAN_INTERVAL)
 
