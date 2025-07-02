@@ -72,7 +72,7 @@ for root, _, files in os.walk(directory):
                         if pattern.search(line):
                             truncated_line = line.strip()[:100]
                             matches.append(f"{filepath}:{line_num}: {truncated_line}")
-            except Exception as e:
+        except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
     return matches
 
