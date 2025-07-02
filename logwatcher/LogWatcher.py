@@ -116,10 +116,21 @@ def load_patterns():
     return "|".join(patterns)  # regex OR
 
 def main_loop():
+    
+    DEFAULT_SCAN_INTERVAL = 600  # fallback
+
     while True:
         start_time = time.time()
         
         config = load_config()
+        
+        SCAN_INTERVAL = int(config.get("scan_interval", DEFAULT_SCAN_INTERVAL))
+        
+        logger.info(f"===================================================================")
+        logger.info(f"========================== Starting Scan ==========================")
+        logger.info(f"===================================================================")
+        logger.info(f"SCAN FREQUENCY: {SCAN_INTERVAL} SEC")
+        
         directory = config.get("directory")
         patterns = load_patterns()
         emails = config.get("emails", "").split(',')
