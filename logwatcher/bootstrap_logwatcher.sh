@@ -39,6 +39,9 @@ git clone "$REPO_URL" "$CLONE_DIR"
 echo "📁 Creating install directory..."
 sudo mkdir -p "$INSTALL_DIR/log"
 
+echo "Stoping service to apply updates..."
+sudo systemctl restart "$SERVICE_NAME"
+
 echo "📄 Copying files (preserving config.txt if present)..."
 for file in "$CLONE_DIR/logwatcher/"*; do
     filename=$(basename "$file")
