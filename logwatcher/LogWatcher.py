@@ -86,7 +86,7 @@ def search_files(directory, compiled_patterns):
                 continue
 
             filepath = os.path.join(root, file)
-            logger.debug(f"Parsing file: {filepath}")
+            logger.info(f"Parsing file: {filepath}")
             try:
                 with open(filepath, 'r', errors='ignore') as f:
                  for line_num, line in enumerate(f, 1):
