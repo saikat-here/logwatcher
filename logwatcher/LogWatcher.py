@@ -202,7 +202,7 @@ def main_loop():
                     body += "\n"
 
                 if len(results) > MAX_LINES:
-                    body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
+                    body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} for complete result."
 
                 send_email("LogWatcher Alert", body, emails)
 
