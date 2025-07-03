@@ -24,13 +24,13 @@ logger = logging.getLogger("LogWatcher")
 logger.setLevel(logging.DEBUG)
 
 # Main operational log (5 MB, no rotation)
-op_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=0, mode='w')
+op_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=5, mode='w')
 op_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 
 # Match log (10 MB, no rotation)
 match_logger = logging.getLogger("MatchLogger")
 match_logger.setLevel(logging.INFO)
-match_handler = RotatingFileHandler(MATCH_LOG_FILE, maxBytes=10*1024*1024, backupCount=0, mode='w')
+match_handler = RotatingFileHandler(MATCH_LOG_FILE, maxBytes=10*1024*1024, backupCount=10, mode='w')
 match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 
 logger.addHandler(op_handler)
