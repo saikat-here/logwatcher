@@ -106,7 +106,6 @@ def search_files(directory, compiled_patterns):
     logger.info("Starting the file parsing")
     
     for root, _, files in os.walk(directory):
-        if 
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
