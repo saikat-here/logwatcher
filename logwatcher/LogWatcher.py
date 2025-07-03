@@ -127,60 +127,35 @@ def main_loop():
     DEFAULT_SCAN_INTERVAL = 600  # fallback
 
     while True:
-        start_time = time.time()
-        
+    start_time = time.time()
+
+    try:
         config = load_config()
-        
         SCAN_INTERVAL = int(config.get("scan_interval", DEFAULT_SCAN_INTERVAL))
-        
-        logger.info(f"===================================================================")
-        logger.info(f"========================== Starting Scan ==========================")
-        logger.info(f"===================================================================")
+
+        logger.info("=" * 66)
+        logger.info(f"{' Starting Scan ':=^66}")
+        logger.info("=" * 66)
         logger.info(f"SCAN FREQUENCY: {SCAN_INTERVAL} SEC")
-        
+
         directory = config.get("directory")
+        compiled_patterns = load_patterns()
         emails = config.get("emails", "").split(',')
 
-        if not directory or not patterns or not emails:
+        if not directory or not compiled_patterns or not emails:
             logger.warning("Invalid config. Skipping iteration.")
-            time.sleep(SCAN_INTERVAL)
-            continue
 
-        compiled_patterns = load_patterns()
-        results = search_files(directory, compiled_patterns)
+        else:
+            results = search_files(directory, compiled_patterns)
+            # [ ... email and reporting logic ... ]
 
+    except Exception as e:
+        logger.error(f"Exception during scan loop: {e}")
 
-        if results:
-            MAX_LINES = 100
-            MAX_LINE_LENGTH = 200
+    elapsed = time.time() - start_time
+    logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
 
-            grouped = defaultdict(list)
-            match_count = 0
-
-            for match in results:
-                if match_count >= MAX_LINES:
-                    break
-                try:
-                    file_path, line_num, line_content = match.split(":", 2)
-                    grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
-                    match_count += 1
-                except ValueError:
-                    logger.warning(f"Skipping malformed match line: {match}")
-
-            body = "The following lines matched your pattern:\n\n"
-            for file_path, lines in grouped.items():
-                body += f"\n📄 File: {file_path}\n"
-                body += "\n".join(f"  {line}" for line in lines)
-                body += "\n"
-
-            if len(results) > MAX_LINES:
-                body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
-
-            send_email("LogWatcher Alert", body, emails)
-        elapsed = time.time() - start_time
-        logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
-        
-        time.sleep(SCAN_INTERVAL)
+    time.sleep(SCAN_INTERVAL)
 
 if __name__ == "__main__":
     main_loop()
