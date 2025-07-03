@@ -81,7 +81,9 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     msg['X-Priority'] = '3'
     msg['X-Mailer'] = 'Python Email Client'
     msg.set_content(body)
-
+    
+    logger.info("Email body is ready, sending the email")
+        
     try:
         with smtplib.SMTP(smtp_server) as server:
             server.send_message(msg)
@@ -91,9 +93,11 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 
 def search_files(directory, compiled_patterns):
     matches = []
+    logger.info("Loading the exclusions list")
     exclusions = load_exclusions()
     email_matched_values = set()
-    
+
+    logger.info("Starting the file parsing")
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
