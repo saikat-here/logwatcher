@@ -86,12 +86,13 @@ def search_files(directory, compiled_patterns):
             try:
                 with open(filepath, 'r', errors='ignore') as f:
                  for line_num, line in enumerate(f, 1):
+                    excluded = any(ex in line for ex in exclusions)
+                    if excluded:
+                            logger.debug(f"Excluded matched line in {filepath}:{line_num}")
+                            continue
                     for pattern, pattern_text in compiled_patterns:
                         match_obj = pattern.search(line)
                         if match_obj:
-                            if any(ex in line for ex in exclusions): 
-                                logger.debug(f"Excluded matched line in {filepath}:{line_num}")
-                                break
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
