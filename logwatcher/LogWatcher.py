@@ -18,7 +18,7 @@ pattern_dir = os.path.join(BASE_DIR, "pattern")
 LOG_DIR = os.path.join(BASE_DIR, "log")
 os.makedirs(LOG_DIR, exist_ok=True)
 
-LOG_FILE = os.path.join(LOG_DIR, "LogWatcher.log")
+LOG_FILE = os.path.join(LOG_DIR, "main.log")
 MATCH_LOG_FILE = os.path.join(LOG_DIR, "matches.log")
 
 CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
@@ -67,6 +67,12 @@ def configure_logging():
     
 DEBUG_LEVEL = configure_logging()
 
+def log(message, level=1):
+    if DEBUG_LEVEL >= level:
+        logger.debug(message)
+    else:
+        logger.info(message)
+
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     hostname = socket.gethostname()
     sender = f"noreply@{hostname}"
@@ -82,23 +88,25 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     msg['X-Mailer'] = 'Python Email Client'
     msg.set_content(body)
     
-    logger.info("Email body is ready, sending the email")
+    log("Email body is ready, sending the email",0)
         
     try:
         with smtplib.SMTP(smtp_server) as server:
             server.send_message(msg)
-        logger.info("Email sent successfully.")
+        log("Email sent successfully.", 0)
     except Exception as e:
         logger.error(f"Error sending email: {e}")
 
 def search_files(directory, compiled_patterns):
     matches = []
-    logger.info("Loading the exclusions list")
+    log("Loading the exclusions list", 0)
     exclusions = load_exclusions()
     email_matched_values = set()
 
     logger.info("Starting the file parsing")
+    
     for root, _, files in os.walk(directory):
+        if 
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
