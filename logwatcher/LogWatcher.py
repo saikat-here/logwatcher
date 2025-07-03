@@ -143,7 +143,7 @@ def search_files(directory, compiled_patterns):
                                 matches.append(email_entry)
                             else:
                                 log(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}")
-                            logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
+                            log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
 
             except Exception as e:
