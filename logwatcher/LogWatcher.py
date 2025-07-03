@@ -85,18 +85,17 @@ def search_files(directory, regex):
             logger.info(f"Parsing file: {filepath}")
             try:
                 with open(filepath, 'r', errors='ignore') as f:
-                    for line_num, line in enumerate(f, 1):
+                 for line_num, line in enumerate(f, 1):
+                    for pattern, pattern_text in compiled_patterns:
                         if pattern.search(line):
-                            logger.debug(f"Matched by: {pattern.pattern} in {filepath}:{line_num}")
-                            
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
-                            match_logger.info(match_log_entry)
+                            match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
 
                             truncated_line = full_line[:200]
                             email_entry = f"{filepath}:{line_num}:{truncated_line}"
                             matches.append(email_entry)
-
+                            logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}")
                             break
 
             except Exception as e:
