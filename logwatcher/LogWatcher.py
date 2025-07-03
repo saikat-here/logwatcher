@@ -123,32 +123,27 @@ def load_patterns():
 
 
 def main_loop():
-    
     DEFAULT_SCAN_INTERVAL = 600  # fallback
 
     while True:
         start_time = time.time()
-        
+
         config = load_config()
-        
         SCAN_INTERVAL = int(config.get("scan_interval", DEFAULT_SCAN_INTERVAL))
-        
-        logger.info(f"===================================================================")
-        logger.info(f"========================== Starting Scan ==========================")
-        logger.info(f"===================================================================")
+
+        logger.info("=" * 66)
+        logger.info(f"{' Starting Scan ':=^66}")
+        logger.info("=" * 66)
         logger.info(f"SCAN FREQUENCY: {SCAN_INTERVAL} SEC")
-        
+
         directory = config.get("directory")
         emails = config.get("emails", "").split(',')
+        compiled_patterns = load_patterns()  # ✅ moved up here
 
-        if not directory or not patterns or not emails:
+        if not directory or not compiled_patterns or not emails:
             logger.warning("Invalid config. Skipping iteration.")
-            time.sleep(SCAN_INTERVAL)
         else:
-            
-            compiled_patterns = load_patterns()
             results = search_files(directory, compiled_patterns)
-
 
             if results:
                 MAX_LINES = 100
@@ -177,9 +172,10 @@ def main_loop():
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
 
                 send_email("LogWatcher Alert", body, emails)
+
         elapsed = time.time() - start_time
         logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
-        
+
         time.sleep(SCAN_INTERVAL)
 
 if __name__ == "__main__":
