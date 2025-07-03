@@ -73,7 +73,6 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 
 def search_files(directory, compiled_patterns):
     matches = []
-    pattern = re.compile(regex, re.IGNORECASE)
 
     for root, _, files in os.walk(directory):
         for file in files:
@@ -106,7 +105,7 @@ def load_patterns():
     pattern_dir = os.path.join(BASE_DIR, "pattern")
     default_file = os.path.join(pattern_dir, "defaultpattern.txt")
     custom_file = os.path.join(pattern_dir, "custompattern.txt")
-    
+
     patterns = set()
     for file_path in [default_file, custom_file]:
         try:
@@ -120,7 +119,8 @@ def load_patterns():
         except Exception as e:
             logger.error(f"Error reading pattern file {file_path}: {e}")
 
-    return "|".join(patterns)  # regex OR
+    return [(re.compile(p, re.IGNORECASE), p) for p in patterns]
+
 
 def main_loop():
     
@@ -139,7 +139,6 @@ def main_loop():
         logger.info(f"SCAN FREQUENCY: {SCAN_INTERVAL} SEC")
         
         directory = config.get("directory")
-        patterns = load_patterns()
         emails = config.get("emails", "").split(',')
 
         if not directory or not patterns or not emails:
@@ -147,8 +146,9 @@ def main_loop():
             time.sleep(SCAN_INTERVAL)
             continue
 
-        regex = f"({patterns})"
-        results = search_files(directory, regex)
+        compiled_patterns = load_patterns()
+        results = search_files(directory, compiled_patterns)
+
 
         if results:
             MAX_LINES = 100
