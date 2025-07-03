@@ -38,7 +38,7 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
 
-DEBUG_LEVEL = configure_logging()
+
 
 def load_config():
     config = {}
@@ -65,7 +65,8 @@ def configure_logging():
     logger.info(f"Debug mode level: {debug_level}")
     return debug_level
 
-        
+ DEBUG_LEVEL = configure_logging()
+
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     hostname = socket.gethostname()
     sender = f"noreply@{hostname}"
