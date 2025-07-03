@@ -100,7 +100,6 @@ sudo systemctl restart "$SERVICE_NAME"
 echo "✅ LogWatcher is up and running."
 
 
-
 echo ""
 echo "🎉 Installation Complete!"
 echo "---------------------------------------------"
