@@ -158,8 +158,10 @@ def main_loop():
                     if match_count >= MAX_LINES:
                         break
                     try:
+                        # file_path, line_num, line_content = match.split(":", 2)
+                        # grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
                         file_path, line_num, line_content = match.split(":", 2)
-                        grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
+                        grouped[file_path].append(f"{line_num}: {line_content.strip()}")
                         match_count += 1
                     except ValueError:
                         logger.warning(f"Skipping malformed match line: {match}")
