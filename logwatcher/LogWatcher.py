@@ -11,6 +11,9 @@ from collections import defaultdict
 
 BASE_DIR = "/opt/LogWatcher"
 
+# Setting pattern directory
+pattern_dir = os.path.join(BASE_DIR, "pattern")
+
 # Setup logging
 LOG_DIR = os.path.join(BASE_DIR, "log")
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -110,7 +113,7 @@ def search_files(directory, compiled_patterns):
     return matches
 
 def load_patterns():
-    pattern_dir = os.path.join(BASE_DIR, "pattern")
+    
     default_file = os.path.join(pattern_dir, "defaultpattern.txt")
     custom_file = os.path.join(pattern_dir, "custompattern.txt")
 
@@ -131,7 +134,7 @@ def load_patterns():
 
 
 def load_exclusions():
-    exclude_file = os.path.join(BASE_DIR, "excluded_lines.txt")
+    exclude_file = os.path.join(pattern_dir, "excluded_lines.txt")
     exclusions = set()
     try:
         with open(exclude_file, 'r') as f:
