@@ -73,7 +73,8 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 
 def search_files(directory, compiled_patterns):
     matches = []
-
+    exclusions = load_exclusions()
+    
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
@@ -88,6 +89,9 @@ def search_files(directory, compiled_patterns):
                     for pattern, pattern_text in compiled_patterns:
                         match_obj = pattern.search(line)
                         if match_obj:
+                            if any(ex in line for ex in exclusions): 
+                                logger.debug(f"Excluded matched line in {filepath}:{line_num}")
+                                break
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
@@ -122,6 +126,22 @@ def load_patterns():
             logger.error(f"Error reading pattern file {file_path}: {e}")
 
     return [(re.compile(p, re.IGNORECASE), p) for p in patterns]
+
+
+def load_exclusions():
+    exclude_file = os.path.join(BASE_DIR, "excluded_lines.txt")
+    exclusions = set()
+    try:
+        with open(exclude_file, 'r') as f:
+            for line in f:
+                cleaned = line.strip()
+                if cleaned and not cleaned.startswith("#"):
+                    exclusions.add(cleaned)
+    except FileNotFoundError:
+        logger.info("No excluded_lines.txt found. No exclusions applied.")
+    except Exception as e:
+        logger.error(f"Error reading excluded_lines.txt: {e}")
+    return exclusions
 
 
 def main_loop():
