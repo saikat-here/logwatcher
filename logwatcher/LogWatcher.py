@@ -64,8 +64,8 @@ def configure_logging():
     match_logger.setLevel(logging.INFO)
     logger.info(f"Debug mode level: {debug_level}")
     return debug_level
-
- DEBUG_LEVEL = configure_logging()
+    
+DEBUG_LEVEL = configure_logging()
 
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     hostname = socket.gethostname()
