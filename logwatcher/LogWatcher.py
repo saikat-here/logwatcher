@@ -77,6 +77,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 def search_files(directory, compiled_patterns):
     matches = []
     exclusions = load_exclusions()
+    email_matched_values = set()
     
     for root, _, files in os.walk(directory):
         for file in files:
@@ -100,11 +101,13 @@ def search_files(directory, compiled_patterns):
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
-
-                            matched_value = match_obj.group(0)[:200]  # truncate just in case
-                            email_entry = f"{filepath}:{line_num}:{matched_value}"
-                            matches.append(email_entry)
-
+                            matched_value = match_obj.group(0)[:200]
+                            if matched_value not in email_matched_values:
+                                email_matched_values.add(matched_value)
+                                email_entry = f"{filepath}:{line_num}:{matched_value}"
+                                matches.append(email_entry)
+                            else:
+                                logger.debug(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}")
                             logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}")
                             break
 
@@ -173,7 +176,7 @@ def main_loop():
             results = search_files(directory, compiled_patterns)
 
             if results:
-                MAX_LINES = 100
+                MAX_LINES = 200
                 MAX_LINE_LENGTH = 200
 
                 grouped = defaultdict(list)
@@ -195,6 +198,7 @@ def main_loop():
                 for file_path, lines in grouped.items():
                     body += f"\n📄 File: {file_path}\n"
                     body += "\n".join(f"  {line}" for line in lines)
+                    body += "\n"
                     body += "\n"
 
                 if len(results) > MAX_LINES:
