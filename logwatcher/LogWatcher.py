@@ -86,7 +86,8 @@ def search_files(directory, compiled_patterns):
             try:
                 with open(filepath, 'r', errors='ignore') as f:
                  for line_num, line in enumerate(f, 1):
-                    excluded = any(ex in line for ex in exclusions)
+                    logger.debug(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}")
+                    excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     if excluded:
                             logger.debug(f"Excluded matched line in {filepath}:{line_num}")
                             continue
