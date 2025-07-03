@@ -4,9 +4,6 @@ directory=/var/log
 # Scan frequency in sec
 scan_interval=600
 
-# Regex patterns to search for (pipe-separated)
-patterns=error|fail|unauthorized
-
 # Set to 1 for more logs
 debug=0
 
