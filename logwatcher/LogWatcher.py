@@ -144,39 +144,39 @@ def main_loop():
         if not directory or not patterns or not emails:
             logger.warning("Invalid config. Skipping iteration.")
             time.sleep(SCAN_INTERVAL)
-            continue
+        else:
+            
+            compiled_patterns = load_patterns()
+            results = search_files(directory, compiled_patterns)
 
-        compiled_patterns = load_patterns()
-        results = search_files(directory, compiled_patterns)
 
+            if results:
+                MAX_LINES = 100
+                MAX_LINE_LENGTH = 200
 
-        if results:
-            MAX_LINES = 100
-            MAX_LINE_LENGTH = 200
+                grouped = defaultdict(list)
+                match_count = 0
 
-            grouped = defaultdict(list)
-            match_count = 0
+                for match in results:
+                    if match_count >= MAX_LINES:
+                        break
+                    try:
+                        file_path, line_num, line_content = match.split(":", 2)
+                        grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
+                        match_count += 1
+                    except ValueError:
+                        logger.warning(f"Skipping malformed match line: {match}")
 
-            for match in results:
-                if match_count >= MAX_LINES:
-                    break
-                try:
-                    file_path, line_num, line_content = match.split(":", 2)
-                    grouped[file_path].append(f"{line_num}: {line_content.strip()[:MAX_LINE_LENGTH]}")
-                    match_count += 1
-                except ValueError:
-                    logger.warning(f"Skipping malformed match line: {match}")
+                body = "The following lines matched your pattern:\n\n"
+                for file_path, lines in grouped.items():
+                    body += f"\n📄 File: {file_path}\n"
+                    body += "\n".join(f"  {line}" for line in lines)
+                    body += "\n"
 
-            body = "The following lines matched your pattern:\n\n"
-            for file_path, lines in grouped.items():
-                body += f"\n📄 File: {file_path}\n"
-                body += "\n".join(f"  {line}" for line in lines)
-                body += "\n"
+                if len(results) > MAX_LINES:
+                    body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
 
-            if len(results) > MAX_LINES:
-                body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)})."
-
-            send_email("LogWatcher Alert", body, emails)
+                send_email("LogWatcher Alert", body, emails)
         elapsed = time.time() - start_time
         logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
         
