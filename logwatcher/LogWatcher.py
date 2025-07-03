@@ -86,18 +86,18 @@ def search_files(directory, compiled_patterns):
                 with open(filepath, 'r', errors='ignore') as f:
                  for line_num, line in enumerate(f, 1):
                     for pattern, pattern_text in compiled_patterns:
-                    match_obj = pattern.search(line)
-                    if match_obj:
-                        full_line = line.strip()
-                        match_log_entry = f"{filepath}:{line_num}:{full_line}"
-                        match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
+                        match_obj = pattern.search(line)
+                        if match_obj:
+                            full_line = line.strip()
+                            match_log_entry = f"{filepath}:{line_num}:{full_line}"
+                            match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
 
-                        matched_value = match_obj.group(0)[:200]  # truncate just in case
-                        email_entry = f"{filepath}:{line_num}:{matched_value}"
-                        matches.append(email_entry)
+                            matched_value = match_obj.group(0)[:200]  # truncate just in case
+                            email_entry = f"{filepath}:{line_num}:{matched_value}"
+                            matches.append(email_entry)
 
-                        logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}")
-                        break
+                            logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}")
+                            break
 
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
