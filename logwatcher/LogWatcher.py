@@ -71,7 +71,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     except Exception as e:
         logger.error(f"Error sending email: {e}")
 
-def search_files(directory, regex):
+def search_files(directory, compiled_patterns):
     matches = []
     pattern = re.compile(regex, re.IGNORECASE)
 
