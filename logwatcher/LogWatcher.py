@@ -24,7 +24,6 @@ MATCH_LOG_FILE = os.path.join(LOG_DIR, "matches.log")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.txt")
 
 logger = logging.getLogger("LogWatcher")
-logger.setLevel(logging.DEBUG)
 
 # Main operational log (5 MB, no rotation)
 op_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=5, mode='w')
@@ -39,6 +38,7 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
 
+DEBUG_LEVEL = configure_logging()
 
 def load_config():
     config = {}
@@ -52,6 +52,20 @@ def load_config():
         logger.error(f"Error loading config: {e}")
     return config
 
+def configure_logging():
+    config = load_config()
+    debug_level = int(config.get("debug", "0").strip())
+
+    if debug_level >= 1:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
+
+    match_logger.setLevel(logging.INFO)
+    logger.info(f"Debug mode level: {debug_level}")
+    return debug_level
+
+        
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     hostname = socket.gethostname()
     sender = f"noreply@{hostname}"
