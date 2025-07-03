@@ -32,7 +32,7 @@ op_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(messa
 # Match log (10 MB, no rotation)
 match_logger = logging.getLogger("MatchLogger")
 match_logger.setLevel(logging.INFO)
-match_handler = RotatingFileHandler(MATCH_LOG_FILE, maxBytes=10*1024*1024, backupCount=10, mode='w')
+match_handler = RotatingFileHandler(LOG_FILE, maxBytes=..., backupCount=..., mode='a', delay=True)
 match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 
 logger.addHandler(op_handler)
