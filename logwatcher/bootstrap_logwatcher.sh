@@ -71,6 +71,17 @@ else
     echo "⚠️  custompattern already exists, preserving that"
 fi
 
+echo "📄 Creating empty excluded_lines.txt if not present..."
+EXCLUDE_FILE="$INSTALL_DIR/pattern/excluded_lines.txt"
+
+if [ ! -f "$EXCLUDE_FILE" ]; then
+    sudo touch "$EXCLUDE_FILE"
+    echo "✅ excluded_lines.txt created in pattern/"
+else
+    echo "⚠️ excluded_lines.txt already exists in pattern/, skipping"
+fi
+
+
 echo "🔧 Making LogWatcher.py executable..."
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
 
