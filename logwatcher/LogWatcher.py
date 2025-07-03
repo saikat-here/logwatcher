@@ -74,6 +74,7 @@ def log(message, level=1):
         logger.info(message)
 
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
+    logger.info("Preparing email header and body")
     hostname = socket.gethostname()
     sender = f"noreply@{hostname}"
 
@@ -88,9 +89,10 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     msg['X-Mailer'] = 'Python Email Client'
     msg.set_content(body)
     
-    log("Email body is ready, sending the email",0)
+    logger.info("Email header and body is ready")
         
     try:
+        logger.info("Sending the email")
         with smtplib.SMTP(smtp_server) as server:
             server.send_message(msg)
         log("Email sent successfully.", 0)
@@ -99,11 +101,11 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 
 def search_files(directory, compiled_patterns):
     matches = []
-    log("Loading the exclusions list", 0)
+    logger.info("Loading the exclusions list")
     exclusions = load_exclusions()
     email_matched_values = set()
 
-    logger.info("Starting the file parsing")
+    logger.info("Starting file parsing")
     
     for root, _, files in os.walk(directory):
         for file in files:
@@ -112,29 +114,36 @@ def search_files(directory, compiled_patterns):
                 continue
 
             filepath = os.path.join(root, file)
-            logger.info(f"Parsing file: {filepath}")
+            log(f"Parsing file: {filepath}")
             try:
+                log(f"Opening file: {filepath}",2) 
                 with open(filepath, 'r', errors='ignore') as f:
+                 log("File opened successfully",2)
                  for line_num, line in enumerate(f, 1):
-                    logger.debug(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}")
+                    log(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}",2)
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     if excluded:
                             logger.debug(f"Excluded matched line in {filepath}:{line_num}")
                             continue
                     for pattern, pattern_text in compiled_patterns:
+                        log(f"Pattern: {pattern}",3)
+                        log(f"pattern_text: {pattern_text}",3)
                         match_obj = pattern.search(line)
+                        log(f"Matche: {match_obj}",3)
                         if match_obj:
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
                             matched_value = match_obj.group(0)[:200]
+                            log("Checking if the matched string already added for email",3)
                             if matched_value not in email_matched_values:
+                                log(f"String is not part of email content, adding that. String: {matched_value}",2)
                                 email_matched_values.add(matched_value)
                                 email_entry = f"{filepath}:{line_num}:{matched_value}"
                                 matches.append(email_entry)
                             else:
-                                logger.debug(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}")
-                            logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}")
+                                log(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}")
+                            logger.debug(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
 
             except Exception as e:
