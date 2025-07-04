@@ -68,7 +68,6 @@ def configure_logging():
 DEBUG_LEVEL = configure_logging()
 
 def log(message, level=1):
-    logger.debug(DEBUG_LEVEL)
     if DEBUG_LEVEL >= level:
         logger.debug(f"DEBUG_LEVEL={level}: {message}")
         
