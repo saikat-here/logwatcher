@@ -122,7 +122,7 @@ def search_files(directory, compiled_patterns):
                     log(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}",2)
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     if excluded:
-                            logger.debug(f"Excluded matched line in {filepath}:{line_num}")
+                            logger.debug(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}")
                             continue
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
