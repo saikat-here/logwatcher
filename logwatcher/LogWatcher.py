@@ -94,7 +94,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
         logger.info("Sending the email")
         with smtplib.SMTP(smtp_server) as server:
             server.send_message(msg)
-        log("Email sent successfully.", 0)
+        logger.info("Email sent successfully.")
     except Exception as e:
         logger.error(f"Error sending email: {e}")
 
