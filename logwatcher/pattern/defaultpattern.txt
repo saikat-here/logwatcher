@@ -75,3 +75,36 @@ Exception: .*(password|token|secret|auth).*
 NET Framework error occurred during execution
 System.Data.SqlClient.SqlException
 
+# Cloud cred 
+(?i)(access|secret|api)[ _-]?(key|token)\s*[:=]\s*["']?[A-Za-z0-9/\-+_=]{10,}["']?
+[A-Za-z0-9]{32,}                    # generic API key
+
+# AWS
+(?i)aws[ _-]?(access)?[ _-]?key[ _-]?id\s*[:=]\s*[A-Z0-9]{20}
+(?i)aws[ _-]?(secret)?[ _-]?access[ _-]?key\s*[:=]\s*[A-Za-z0-9/+=]{40}
+AKIA[0-9A-Z]{16}                    # AWS Access Key ID
+ASIA[0-9A-Z]{16}                    # AWS temporary Access Key ID
+http://169\.254\.169\.254/latest/meta-data/.+
+
+# Azure
+(?i)(client|sp|app)[ _-]?(id|secret)\s*[:=]\s*["']?[0-9a-f\-]{20,}["']?
+(?i)AzureTableAccountName=[0-9a-z]+;AccountKey=[A-Za-z0-9+/=]{20,}
+SAS_TOKEN=[A-Za-z0-9\-_=]{30,}
+http://169\.254\.169\.254/metadata/instance\?.*
+
+# GCP
+"client_email"\s*:\s*"[0-9a-zA-Z_]+@.+\.gserviceaccount\.com"
+"private_key"\s*:\s*"-----BEGIN PRIVATE KEY-----[A-Za-z0-9/\n=]+-----END PRIVATE KEY-----"
+ya29\.[0-9A-Za-z\-_]{30,}              # OAuth2 access token
+http://metadata\.google.internal/computeMetadata/v1/.*
+
+# Other Cloud Indicators
+x-goog-api-key\s*[:=]\s*["']?[A-Za-z0-9\-]{20,}["']?       # Google API key
+x-ms-[a-z\-]+:\s*.+                                         # Azure HTTP headers
+X-Amz-Security-Token\s*[:=]\s*["']?[A-Za-z0-9/+=]{10,}["']? # AWS STS
+
+# GCP Secret Manager
+projects/[a-z0-9\-]+/secrets/[a-zA-Z0-9_\-]+/versions/\d+
+
+# Azure Key Vault access
+vault.azure.net/secrets/[a-zA-Z0-9\-_]+
