@@ -45,7 +45,8 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
 
-def save_matches_to_csv(matches, output_file=f"matched_strings_{time.time()}.csv"):
+def save_matches_to_csv(matches):
+    output_file=f"matched_strings_{time.time()}.csv"
     logger.info(f"Saving the matched strings to CSV")
     output_file = os.path.join(CSV_DIR, output_file)
     logger.info(f"File path: {output_file}")
