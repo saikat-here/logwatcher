@@ -89,9 +89,8 @@ DEBUG_LEVEL = configure_logging()
 
 def log(message, level=1):
     if DEBUG_LEVEL >= level:
-        logger.debug(f"DEBUG_LEVEL={level}: {message}")
+        logger.debug(message)
         
-
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     logger.info("Preparing email header and body")
     hostname = socket.gethostname()
@@ -239,7 +238,7 @@ def main_loop():
             results = search_files(directory, compiled_patterns)
 
             if results:
-                if int(config.get("save_to_CSV", "0").strip()):
+                if int(config().get("save_to_CSV", "0").strip()):
                     match_logger.info(f"Saving the matched string to CSV before sending email")
                     save_matches_to_csv(matches)
                 else:
