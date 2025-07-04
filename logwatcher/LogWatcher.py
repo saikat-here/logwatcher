@@ -221,7 +221,7 @@ def main_loop():
         start_time = time.time()
 
         config = load_config()
-        SCAN_INTERVAL = int(config.get("scan_interval", DEFAULT_SCAN_INTERVAL))
+        SCAN_INTERVAL = int(load_config().get("scan_interval", DEFAULT_SCAN_INTERVAL))
 
         logger.info("=" * 66)
         logger.info(f"{' Starting Scan ':=^66}")
@@ -238,7 +238,7 @@ def main_loop():
             results = search_files(directory, compiled_patterns)
 
             if results:
-                if int(config().get("save_to_CSV", "0").strip()):
+                if int(config.get("save_to_CSV", "0").strip()):
                     match_logger.info(f"Saving the matched string to CSV before sending email")
                     save_matches_to_csv(matches)
                 else:
