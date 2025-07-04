@@ -38,6 +38,7 @@ git clone "$REPO_URL" "$CLONE_DIR"
 
 echo "📁 Creating install directory..."
 sudo mkdir -p "$INSTALL_DIR/log"
+sudo mkdir -p "$INSTALL_DIR/CSV"
 
 echo "Stoping service to apply updates..."
 sudo systemctl stop "$SERVICE_NAME"
