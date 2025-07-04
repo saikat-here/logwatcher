@@ -12,6 +12,9 @@ from collections import defaultdict
 
 BASE_DIR = "/opt/LogWatcher"
 
+# Test mode file count. It will parse 5 files if test mode is set to config
+test_mode_file_count = 5
+
 # Save the matched string to CSV
 CSV_DIR = os.path.join(BASE_DIR, "CSV")
 
@@ -122,6 +125,8 @@ def search_files(directory, compiled_patterns):
     email_matched_values = set()
 
     logger.info("Starting file parsing")
+
+    file_count = test_mode_file_count
     
     for root, _, files in os.walk(directory):
         for file in files:
@@ -129,6 +134,13 @@ def search_files(directory, compiled_patterns):
                 logger.info(f"Skipping compressed file: {file}")
                 continue
 
+            if int(config.get("test_mode", "0").strip()):
+                logger.info(f"Test mode is set to TRUE, remaining file count: {file_count}")
+
+                if file_count < 0:
+                    return matches
+                file_count-= 1
+                
             filepath = os.path.join(root, file)
             log(f"Parsing file: {filepath}")
             try:
@@ -161,12 +173,9 @@ def search_files(directory, compiled_patterns):
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
-
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
-
-    match_logger.info(f"Saving the matched string to CSV before sending email")
-    save_matches_to_csv(matches)
+                
     return matches
 
 def load_patterns():
@@ -230,6 +239,12 @@ def main_loop():
             results = search_files(directory, compiled_patterns)
 
             if results:
+                if int(config.get("save_to_CSV", "0").strip()):
+                    match_logger.info(f"Saving the matched string to CSV before sending email")
+                    save_matches_to_csv(matches)
+                else:
+                    match_logger.info(f"save_to_CSV set to FALSE, not saving the matched result to CSV")
+        
                 MAX_LINES = 200
                 MAX_LINE_LENGTH = 200
 
