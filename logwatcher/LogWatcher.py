@@ -69,7 +69,7 @@ DEBUG_LEVEL = configure_logging()
 
 def log(message, level=1):
     if level >= DEBUG_LEVEL:
-        logger.debug(message)
+        logger.debug(f"DEBUG_LEVEL={level}": message)
         
 
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
