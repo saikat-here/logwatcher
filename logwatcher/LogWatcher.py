@@ -4,12 +4,16 @@ import time
 import smtplib
 import socket
 import logging
+import csv
 from logging.handlers import RotatingFileHandler
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
 
 BASE_DIR = "/opt/LogWatcher"
+
+# Save the matched string to CSV
+CSV_DIR = os.path.join(BASE_DIR, "CSV")
 
 # Setting pattern directory
 pattern_dir = os.path.join(BASE_DIR, "pattern")
@@ -38,7 +42,20 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
 
+def save_matches_to_csv(matches, output_file=f"matched_strings_{time.time()}.csv"):
+    logger.info(f"Saving the matched strings to CSV")
+    output_file = os.path.join(CSV_DIR, output_file)
+    logger.info(f"File path: {output_file}")
 
+    unique_matches = set(match.split(":", 2)[-1].strip() for match in matches)
+    
+    with open(output_file, mode='w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['matched_str', 'label'])  # Header
+
+        for match_str in unique_matches:
+            log(f"Saving matched string: {match_str}",3)
+            writer.writerow([match_str,""])  # Leave label blank for manual tagging
 
 def load_config():
     config = {}
@@ -147,6 +164,9 @@ def search_files(directory, compiled_patterns):
 
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
+
+    match_logger.info(f"Saving the matched string to CSV before sending email")
+    save_matches_to_csv(matches)
     return matches
 
 def load_patterns():
@@ -236,7 +256,7 @@ def main_loop():
                     body += "\n"
 
                 if len(results) > MAX_LINES:
-                    body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} for complete result."
+                    body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
 
                 send_email("LogWatcher Alert", body, emails)
 
