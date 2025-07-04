@@ -134,7 +134,7 @@ def search_files(directory, compiled_patterns):
                 logger.info(f"Skipping compressed file: {file}")
                 continue
 
-            if int(load_config.get("test_mode", "0").strip()):
+            if int(load_config().get("test_mode", "0").strip()):
                 logger.info(f"Test mode is set to TRUE, remaining file count: {file_count}")
 
                 if file_count < 0:
