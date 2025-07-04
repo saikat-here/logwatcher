@@ -60,7 +60,8 @@ def save_matches_to_csv(matches):
         for match_str in unique_matches:
             log(f"Saving matched string: {match_str}",3)
             writer.writerow([match_str,""])  # Leave label blank for manual tagging
-
+    logger.info(f"Matched strings are save to CSV")
+    
 def load_config():
     config = {}
     try:
