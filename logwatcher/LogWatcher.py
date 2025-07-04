@@ -275,7 +275,7 @@ def main_loop():
                 send_email("LogWatcher Alert", body, emails)
 
         elapsed = time.time() - start_time
-        logger.info(f"⏱️ Cycle completed in {elapsed:.2f} seconds.")
+        logger.info(f"Cycle completed in {elapsed//60} mins.")
 
         time.sleep(SCAN_INTERVAL)
 
