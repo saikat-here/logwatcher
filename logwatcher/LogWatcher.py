@@ -141,7 +141,7 @@ def search_files(directory, compiled_patterns):
                                 email_entry = f"{filepath}:{line_num}:{matched_value}"
                                 matches.append(email_entry)
                             else:
-                                log(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}")
+                                log(f"Duplicate match skipped in email: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
 
