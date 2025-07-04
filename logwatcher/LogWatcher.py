@@ -136,7 +136,7 @@ def search_files(directory, compiled_patterns):
             if int(load_config().get("test_mode", "0").strip()):
                 logger.info(f"Test mode is set to TRUE, remaining file count: {file_count}")
 
-                if file_count < 0:
+                if file_count < 1 and matches:
                     return matches
                 file_count-= 1
                 
@@ -239,7 +239,7 @@ def main_loop():
 
             if results:
                 if int(config.get("save_to_CSV", "0").strip()):
-                    match_logger.info(f"Saving the matched string to CSV before sending email")
+                    logger.info(f"Saving the matched string to CSV before sending email")
                     save_matches_to_csv(matches)
                 else:
                     match_logger.info(f"save_to_CSV set to FALSE, not saving the matched result to CSV")
