@@ -156,22 +156,6 @@ def search_files(directory, compiled_patterns):
                     log(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}",2)
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     
-                    # ------------------
-                    if classify_line(line) == "false_positive":
-                                log(f"CodeBERT marked as SAFE: {line}", 1)
-                                continue
-                    
-                    log(f"CodeBERT marked as UNSAFE: {line}", 1)
-                    email_entry = f"{filepath}:{line_num}:{line}"
-                    matches.append(email_entry)
-                    for_csv_file[line] = line
-            except Exception as e:
-                logger.error(f"Error reading {filepath}: {e}")
-                
-    return matches, for_csv_file
-    # ------------------
-                
-    """
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
@@ -204,9 +188,8 @@ def search_files(directory, compiled_patterns):
                             break
     
             except Exception as e:
-
                 logger.error(f"Error reading {filepath}: {e}")
-    """            
+            
     return matches, for_csv_file
 
 def load_patterns():
