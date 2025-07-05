@@ -255,7 +255,7 @@ def main_loop():
             if results:
                 if int(config.get("save_to_CSV", "0").strip()):
                     logger.info(f"Saving the matched string to CSV before sending email")
-                    # save_matches_to_csv(for_csv_file)
+                    save_matches_to_csv(for_csv_file)
                 else:
                     match_logger.info(f"save_to_CSV set to FALSE, not saving the matched result to CSV")
         
