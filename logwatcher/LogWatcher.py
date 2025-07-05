@@ -169,9 +169,9 @@ def search_files(directory, compiled_patterns):
                 logger.error(f"Error reading {filepath}: {e}")
                 
     return matches, for_csv_file
-                    # ------------------
-                     
-                    """
+    # ------------------
+                
+    """
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
@@ -202,10 +202,11 @@ def search_files(directory, compiled_patterns):
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
-                    """
+    
             except Exception as e:
+
                 logger.error(f"Error reading {filepath}: {e}")
-                
+    """            
     return matches, for_csv_file
 
 def load_patterns():
