@@ -157,7 +157,7 @@ def search_files(directory, compiled_patterns):
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     
                     # ------------------
-                    if classify_line(match_obj.group(0)) == "false_positive":
+                    if classify_line(line) == "false_positive":
                                 log(f"CodeBERT marked as SAFE: {line}", 1)
                                 continue
                     
