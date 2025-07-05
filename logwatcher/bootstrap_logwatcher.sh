@@ -20,7 +20,7 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 sudo /usr/local/bin/python3.10 -m ensurepip
 sudo /usr/local/bin/python3.10 -m pip install --upgrade pip
-sudo /usr/local/bin/python3.10 -m pip install transformers torch
+sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn
 
 function uninstall() {
     echo "🛑 Stopping $SERVICE_NAME service..."
