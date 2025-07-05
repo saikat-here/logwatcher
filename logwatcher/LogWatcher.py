@@ -158,9 +158,6 @@ def search_files(directory, compiled_patterns):
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
-                    elif classify_line(line) == "false_positive":
-                        log(f"CodeBERT marked as false positive: {line}", 1)
-                        continue
                         
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
@@ -171,6 +168,11 @@ def search_files(directory, compiled_patterns):
                             full_line = line.strip()
                             match_log_entry = f"{filepath}:{line_num}:{full_line}"
                             match_logger.info(f"{match_log_entry} [matched pattern: {pattern_text}]")
+
+                            if classify_line(match_obj.group(0)) == "false_positive":
+                                log(f"CodeBERT marked as false positive: {line}", 1)
+                                continue
+                                
                             matched_value = match_obj.group(0)[:200]
                             log("Checking if the matched string already added for email",3)
                             if matched_value not in email_matched_values:
