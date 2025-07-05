@@ -94,8 +94,8 @@ fi
 echo "🔧 Making LogWatcher.py executable..."
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
 
-echo "🔧 Updating ExecStart with detected Python path..."
-sudo sed -i "s|^ExecStart=.*|ExecStart=$PYTHON_BIN $INSTALL_DIR/LogWatcher.py|" "$INSTALL_DIR/$SERVICE_FILE"
+# echo "🔧 Updating ExecStart with detected Python path..."
+# sudo sed -i "s|^ExecStart=.*|ExecStart=$PYTHON_BIN $INSTALL_DIR/LogWatcher.py|" "$INSTALL_DIR/$SERVICE_FILE"
 
 echo "🔗 Installing service..."
 sudo cp "$INSTALL_DIR/$SERVICE_FILE" "$SYSTEMD_PATH"
