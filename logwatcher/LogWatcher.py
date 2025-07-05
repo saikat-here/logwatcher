@@ -155,6 +155,20 @@ def search_files(directory, compiled_patterns):
                  for line_num, line in enumerate(f, 1):
                     log(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}",2)
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
+            
+                    # ------------------
+                    if classify_line(match_obj.group(0)) == "false_positive":
+                                log(f"CodeBERT marked as SAFE: {line}", 1)
+                                continue
+                    
+                    log(f"CodeBERT marked as UNSAFE: {line}", 1)
+                    email_entry = f"{filepath}:{line_num}:{line}"
+                    matches.append(email_entry)
+                    for_csv_file[line] = line
+                    return matches, for_csv_file
+                    # ------------------
+                     
+                    """
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
@@ -185,6 +199,7 @@ def search_files(directory, compiled_patterns):
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
+                    """
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
                 
