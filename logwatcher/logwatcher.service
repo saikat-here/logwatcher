@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /opt/LogWatcher/LogWatcher.py
+ExecStart=/usr/local/bin/python3.10 /opt/LogWatcher/LogWatcher.py
 WorkingDirectory=/opt/LogWatcher
 Restart=on-failure
 
