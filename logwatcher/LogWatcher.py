@@ -165,7 +165,7 @@ def search_files(directory, compiled_patterns):
                     email_entry = f"{filepath}:{line_num}:{line}"
                     matches.append(email_entry)
                     for_csv_file[line] = line
-                    return matches, for_csv_file
+    return matches, for_csv_file
                     # ------------------
                      
                     """
