@@ -9,6 +9,8 @@ from logging.handlers import RotatingFileHandler
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
+from codebert_filter import classify_line
+
 
 BASE_DIR = "/opt/LogWatcher"
 
@@ -156,6 +158,10 @@ def search_files(directory, compiled_patterns):
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
+                    elif classify_line(line) == "false_positive":
+                        log(f"CodeBERT marked as false positive: {line}", 1)
+                        continue
+                        
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
                         log(f"pattern_text: {pattern_text}",3)
