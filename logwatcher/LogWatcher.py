@@ -51,15 +51,15 @@ def save_matches_to_csv(matches):
     output_file = os.path.join(CSV_DIR, output_file)
     logger.info(f"File path: {output_file}")
 
-    unique_matches = set(match.split(":", 2)[-1].strip() for match in matches)
+    # unique_matches = set(match.split(":", 2)[-1].strip() for match in matches)
     
     with open(output_file, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['matched_str', 'label'])  # Header
+        writer.writerow(['log_line','matched_str', 'label'])  # Header
 
-        for match_str in unique_matches:
-            log(f"Saving matched string: {match_str}",3)
-            writer.writerow([match_str,""])  # Leave label blank for manual tagging
+        for line, match_str in matches.items():
+            log(f"Saving to CSV. Line: {line}, match_str: {match_str}",3)
+            writer.writerow([line,match_str,""])  # Leave label blank for manual tagging
     logger.info(f"Matched strings are save to CSV")
     
 def load_config():
@@ -121,6 +121,8 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
 
 def search_files(directory, compiled_patterns):
     matches = []
+    for_csv_file = {}
+    
     logger.info("Loading the exclusions list")
     exclusions = load_exclusions()
     email_matched_values = set()
@@ -139,7 +141,7 @@ def search_files(directory, compiled_patterns):
                 logger.info(f"Test mode is set to TRUE, remaining file count: {file_count}")
 
                 if file_count < 1 and matches:
-                    return matches
+                    return matches, for_csv_file
                 file_count-= 1
                 
             filepath = os.path.join(root, file)
@@ -170,6 +172,7 @@ def search_files(directory, compiled_patterns):
                                 email_matched_values.add(matched_value)
                                 email_entry = f"{filepath}:{line_num}:{matched_value}"
                                 matches.append(email_entry)
+                                for_csv_file[line] = matched_value
                             else:
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
@@ -177,7 +180,7 @@ def search_files(directory, compiled_patterns):
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
                 
-    return matches
+    return matches, for_csv_file
 
 def load_patterns():
     
@@ -232,17 +235,17 @@ def main_loop():
 
         directory = config.get("directory")
         emails = config.get("emails", "").split(',')
-        compiled_patterns = load_patterns()  # ✅ moved up here
-
+        compiled_patterns = load_patterns()  
+        
         if not directory or not compiled_patterns or not emails:
             logger.warning("Invalid config. Skipping iteration.")
         else:
-            results = search_files(directory, compiled_patterns)
+            results, for_csv_file = search_files(directory, compiled_patterns)
 
             if results:
                 if int(config.get("save_to_CSV", "0").strip()):
                     logger.info(f"Saving the matched string to CSV before sending email")
-                    save_matches_to_csv(results)
+                    save_matches_to_csv(for_csv_file)
                 else:
                     match_logger.info(f"save_to_CSV set to FALSE, not saving the matched result to CSV")
         
