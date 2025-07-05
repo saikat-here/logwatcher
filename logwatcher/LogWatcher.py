@@ -174,7 +174,7 @@ def search_files(directory, compiled_patterns):
                                 log(f"CodeBERT marked as SAFE. Matched str: {match_obj.group(0)}, Full Line: {line}", 2)
                                 continue
 
-                            log(f"CodeBERT marked as UNSAFE. Matched str: {match_obj.group(0)}, Full Line: {line}", 2)
+                            log(f"CodeBERT marked as UNSAFE. Matched str: {match_obj.group(0)}, Full Line: {line}", 1)
                             matched_value = match_obj.group(0)[:200]
                             log("Checking if the matched string already added for email",3)
                             if matched_value not in email_matched_values:
