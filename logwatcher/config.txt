@@ -4,14 +4,14 @@ directory=/var/log
 # Scan frequency in sec
 scan_interval=600
 
-# Set values between 1,2,3 more debug logs
-debug=1
+# Set values between 0,1,2,3 more debug logs
+debug=0
 
 # Set to 1 if you want the matched strings to be saved to CSV else 0
-save_to_CSV=1
+save_to_CSV=0
 
 #  Setting this to 1 will parse 5 files. Just to test if everything is working. Set to 0 for prod mode
-test_mode=1
+test_mode=0
 
 # Comma-separated list of recipient emails
 emails=myemail@gmail.com
