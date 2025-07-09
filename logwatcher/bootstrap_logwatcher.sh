@@ -8,6 +8,7 @@ SERVICE_NAME="logwatcher"
 SERVICE_FILE="logwatcher.service"
 SYSTEMD_PATH="/etc/systemd/system/$SERVICE_FILE"
 
+
 # echo "Installing and configuring Python3.10 and related packages"
 # sudo yum groupinstall "Development Tools" -y
 #sudo yum install gcc openssl-devel bzip2-devel libffi-devel wget make -y
@@ -20,6 +21,9 @@ SYSTEMD_PATH="/etc/systemd/system/$SERVICE_FILE"
 # sudo /usr/local/bin/python3.10 -m ensurepip
 # sudo /usr/local/bin/python3.10 -m pip install --upgrade pip
 # sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn
+
+echo "Deleting the existing model directory"
+rm -rf "INSTALL_DIR/model"
 
 function uninstall() {
     echo "🛑 Stopping $SERVICE_NAME service..."
