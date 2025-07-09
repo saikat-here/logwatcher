@@ -199,6 +199,7 @@ def search_files(directory, compiled_patterns):
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
 
                             if len(matches)>200:
+                                logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
                         
                             break
