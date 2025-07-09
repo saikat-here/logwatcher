@@ -192,7 +192,7 @@ def search_files(directory, compiled_patterns):
                             if matched_value not in email_matched_values:
                                 log(f"String is not part of email content, adding that. String: {matched_value}",2)
                                 email_matched_values.add(matched_value)
-                                email_entry = f"{filepath}:{line_num}:{matched_value}"
+                                email_entry = f"{filepath}:{line_num}:{matched_value}->{line}"
                                 matches.append(email_entry)
                                 for_csv_file[line] = matched_value
                             else:
