@@ -170,8 +170,6 @@ def search_files(directory, compiled_patterns):
                     for_csv_file[line] = line
 
                     """
-                    if len(matches)>200:
-                        return matches, for_csv_file
                         
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
@@ -199,6 +197,10 @@ def search_files(directory, compiled_patterns):
                             else:
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
+
+                            if len(matches)>200:
+                                return matches, for_csv_file
+                        
                             break
                 
             except Exception as e:
