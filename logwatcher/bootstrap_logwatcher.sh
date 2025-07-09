@@ -7,6 +7,7 @@ INSTALL_DIR="/opt/LogWatcher"
 SERVICE_NAME="logwatcher"
 SERVICE_FILE="logwatcher.service"
 SYSTEMD_PATH="/etc/systemd/system/$SERVICE_FILE"
+MODEL_DIR="$INSTALL_DIR/model"
 
 
 # echo "Installing and configuring Python3.10 and related packages"
@@ -23,7 +24,7 @@ SYSTEMD_PATH="/etc/systemd/system/$SERVICE_FILE"
 # sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn
 
 echo "Deleting the existing model directory"
-rm -rf "INSTALL_DIR/model"
+rm -rf $MODEL_DIR
 
 function uninstall() {
     echo "🛑 Stopping $SERVICE_NAME service..."
@@ -51,6 +52,11 @@ sudo mkdir -p "$INSTALL_DIR/log"
 
 echo "📁 Creating CVS file directory..."
 sudo mkdir -p "$INSTALL_DIR/CSV"
+
+echo "📁 Creating MODEL directory..."
+sudo mkdir -p "$MODEL_DIR"
+
+
 
 echo "Stoping service to apply updates..."
 sudo systemctl stop "$SERVICE_NAME"
