@@ -108,3 +108,78 @@ projects/[a-z0-9\-]+/secrets/[a-zA-Z0-9_\-]+/versions/\d+
 
 # Azure Key Vault access
 vault.azure.net/secrets/[a-zA-Z0-9\-_]+
+
+# Exception patterns
+(?i)\bexception\b
+(?i)stacktrace
+(?i)null(pointer)?\sexception
+(?i)index\sout\sof\sbounds
+(?i)cannot\sread\sproperty\s.*\sof\sundefined
+(?i)segmentation\sfault
+(?i)panic:
+(?i)traceback
+(?i)keyerror:.*  # Python
+(?i)valueerror:.*  # Python
+(?i)unhandled\sexception
+
+# MSSQL 
+(?i)sql\s(server|exception|error)
+(?i)deadlock\sdetected
+(?i)cannot\sinsert\sduplicate\skey
+(?i)timeout\sexpired
+(?i)invalid\sobject\sname
+(?i)login\sfailed\sfor\suser
+(?i)syntax\serror\sin\sT?SQL
+(?i)query\sfailed
+(?i)transaction\srollback
+(?i)violation\sof\sPRIMARY\sKEY
+(?i)invalid\scast
+(?i)The\slocale\sidentifier\s\(LCID\)\s\d+\sis\snot\ssupported
+(?i)sql\serror
+(?i)syntax\serror\snear\s'.*?'
+(?i)connection\stim(ed)?\sout
+(?i)cannot\sinsert\sduplicate\skey
+(?i)invalid\sobject\sname
+(?i)deadlock\sdetected
+(?i)login\sfailed\sfor\suser
+(?i)query\sterminated
+(?i)violation\sof\sPRIMARY\sKEY
+(?i)The\slocale\sidentifier\s\(LCID\)\s\d+\sis\snot\ssupported
+
+
+(?i)\bexception\b
+(?i)unhandled\sexception
+(?i)stack\s(trace|traceback)
+(?i)segmentation\sfault
+(?i)null\s(pointer)?\sexception
+(?i)fatal\serror
+(?i)core\sdumped
+(?i)access\sviolation
+(?i)crashed\swith\ssignal\s\d+
+
+(?i)Traceback\s\(most\srecent\scall\slast\):
+(?i)File\s".*?",\sline\s\d+,\sin\s.*
+(?i)ModuleNotFoundError:
+(?i)NameError:\sname\s'.+?'\sis\snot\sdefined
+(?i)TypeError:
+(?i)ValueError:
+(?i)IndexError:
+(?i)KeyError:
+(?i)ImportError:
+(?i)IndentationError:
+(?i)RuntimeError:
+(?i)AssertionError:
+
+(?i)Segmentation\sfault
+(?i)terminate\scalled\safter\sthrowing\s(an\sinstance\sof\s)?'.*'
+(?i)stack\soverflow
+(?i)std::\w+_error
+(?i)std::bad_alloc
+(?i)std::out_of_range
+(?i)std::length_error
+(?i)double\sfree\sdetected
+(?i)abort\scalled
+(?i)assertion\sfailed:
+(?i)undefined\sreference\sto\s.+  # linker error
+
+
