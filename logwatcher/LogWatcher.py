@@ -56,7 +56,7 @@ def save_matches_to_csv(matches):
     # unique_matches = set(match.split(":", 2)[-1].strip() for match in matches)
     
     with open(output_file, mode='w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, escapechar='\\', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['log_line','matched_str', 'label'])  # Header
 
         for line, match_str in matches.items():
