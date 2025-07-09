@@ -158,4 +158,6 @@ echo ""
 echo "🔁 Changes apply automatically on the next scan cycle."
 echo "=========================================================="
 
+echo -e "\033[31m Important!! By default, it parses all files in the /var/log directory. You can customize this by updating the path in the configuration file located at /opt/LogWatcher/config.txt to match your application-specific log directory \033[0m"
+
 
