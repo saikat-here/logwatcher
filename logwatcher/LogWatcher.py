@@ -168,10 +168,11 @@ def search_files(directory, compiled_patterns):
                     email_entry = f"{filepath}:{line_num}:{line}"
                     matches.append(email_entry)
                     for_csv_file[line] = line
+
+                    """
                     if len(matches)>200:
                         return matches, for_csv_file
                         
-                    """
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
                         log(f"pattern_text: {pattern_text}",3)
