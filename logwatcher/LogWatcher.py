@@ -159,7 +159,18 @@ def search_files(directory, compiled_patterns):
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
+
+                    if classify_line(match_obj.group(0)) == "false_positive":
+                        log(f"CodeBERT marked as SAFE. Matched str: {match_obj.group(0)}, Full Line: {line}", 2)
+                        continue
+                    log(f"CodeBERT marked as UNSAFE. Matched str: {match_obj.group(0)}, Full Line: {line}", 1)
+                    email_entry = f"{filepath}:{line_num}:{line}"
+                    matches.append(email_entry)
+                    for_csv_file[line] = line
+                    if len(matches)>200:
+                        return matches, for_csv_file
                         
+                    """
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
                         log(f"pattern_text: {pattern_text}",3)
@@ -187,7 +198,7 @@ def search_files(directory, compiled_patterns):
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
                             break
-    
+                    """
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
             
