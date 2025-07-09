@@ -1,24 +1,27 @@
-from huggingface_hub import hf_hub_download
+from huggingface_hub import snapshot_download
 import os
 import shutil
 
+# Set base and destination directory
 BASE_DIR = "/opt/LogWatcher"
 destination_dir = os.path.join(BASE_DIR, "model")
-destination_file = os.path.join(destination_dir, "model.safetensors")
-
-print(f"Downloading the model at: {destination_dir}")
 os.makedirs(destination_dir, exist_ok=True)
 
-model_path = hf_hub_download(
+print(f"📥 Downloading all model files into: {destination_dir}")
+
+# Download all files from the model repo
+model_dir = snapshot_download(
     repo_id="saikat100/cvbert",
-    filename="model.safetensors"
+    repo_type="model",
+    local_dir=destination_dir,
+    local_dir_use_symlinks=False  # ensures actual files are copied
 )
-print("Hugging Face cached path:", model_path)
 
-shutil.copy(model_path, destination_file)
-print("Copied to:", destination_file)
+print("✅ All files downloaded to:", model_dir)
 
-if os.path.exists(destination_file):
-    print("✅ Model downloaded successfully.")
+# Optional: Confirm key files
+expected = os.path.join(destination_dir, "model.safetensors")
+if os.path.exists(expected):
+    print("✅ model.safetensors exists.")
 else:
-    print("❌ Model not found after copy.")
+    print("⚠️ model.safetensors not found.")
