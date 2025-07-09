@@ -15,7 +15,7 @@ from codebert_filter import classify_line
 BASE_DIR = "/opt/LogWatcher"
 
 # Test mode file count. It will parse 5 files if test mode is set to config
-test_mode_file_count = 5
+test_mode_file_count = 10
 
 # Save the matched string to CSV
 CSV_DIR = os.path.join(BASE_DIR, "CSV")
