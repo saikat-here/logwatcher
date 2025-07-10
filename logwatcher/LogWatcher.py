@@ -10,6 +10,7 @@ from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
 from codebert_filter import classify_line
+import subprocess
 
 
 BASE_DIR = "/opt/LogWatcher"
@@ -255,8 +256,17 @@ def main_loop():
     DEFAULT_SCAN_INTERVAL = 600  # fallback
 
     
+        
 
     while True:
+        logger.info(f"Model download frequency is {MODEL_DOWNLOAD_FREQUENCY_MIN} min, checking if model download is needed")
+        if (time.time() - LAST_MODEL_DOWNLOAD_TIME) > MODEL_DOWNLOAD_FREQUENCY_MIN:
+            logger.info("Need to download the model, calling model_download.py")
+            subprocess.run(["/usr/local/bin/python3.10", "/opt/LogWatcher/model/model_download.py"], check=True)
+            logger.info("Model download completed")
+        else:
+            logger.info("Model download is not required")
+            
         start_time = time.time()
 
         config = load_config()
