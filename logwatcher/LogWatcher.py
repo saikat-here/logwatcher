@@ -100,7 +100,7 @@ def log(message, level=1):
         logger.debug(message)
 
 def download_model():
-    from huggingface_hub import hf_hub_download
+    from huggingface_hub import snapshot_download
     import os
     import shutil
 
