@@ -181,7 +181,7 @@ def search_files(directory, compiled_patterns):
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
         for file in files:
-            log_source_name = file.split("_")[0] # remoing the date time of the log, this can disturn the training.
+            log_source_name = file.replace(".log", "").split("_")[0] # remoing the date time of the log, this can disturn the training.
             
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
