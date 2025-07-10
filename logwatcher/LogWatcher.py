@@ -217,7 +217,7 @@ def search_files(directory, compiled_patterns):
                     worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
                     # for_csv_file[line] = line
 
-                    if len(matches)>10:
+                    if len(matches)>20:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
 
