@@ -13,6 +13,10 @@ from collections import defaultdict
 
 BASE_DIR = "/opt/LogWatcher"
 
+# model download details
+LAST_MODEL_DOWNLOAD_TIME = 0
+MODEL_DOWNLOAD_FREQUENCY_MIN = (1*60)
+
 # Test mode file count. It will parse 5 files if test mode is set to config
 test_mode_file_count = 10
 
@@ -45,10 +49,6 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
-
-# model download details
-LAST_MODEL_DOWNLOAD_TIME = 0
-MODEL_DOWNLOAD_FREQUENCY_MIN = (1*60)
 
 
 def save_matches_to_csv(matches):
