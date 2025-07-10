@@ -9,9 +9,13 @@ from logging.handlers import RotatingFileHandler
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
-
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 BASE_DIR = "/opt/LogWatcher"
+
+# GCP scope
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 # model download details
 LAST_MODEL_DOWNLOAD_TIME = 0
@@ -164,7 +168,15 @@ def search_files(directory, compiled_patterns):
     logger.info("Starting file parsing")
 
     file_count = test_mode_file_count
-    
+
+
+    # Authenticate to GCP
+    creds = ServiceAccountCredentials.from_json_keyfile_name("cv-logwatcher-project-gcp.json", scope)
+    client = gspread.authorize(creds)
+    # Open the Google Sheet
+    spreadsheet = client.open("log-labels") 
+    worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
+
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
@@ -192,14 +204,19 @@ def search_files(directory, compiled_patterns):
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
 
-                    """
+                    
                     if classify_line(line) == "false_positive":
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
                         continue
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
-                    email_entry = f"{filepath}:{line_num}:{line}"
+                    email_entry = f"{filepath}:{line_num}:{matched_value}->{line}"
                     matches.append(email_entry)
-                    for_csv_file[line] = line
+                    worksheet.append_row([f"[source:{file}]{line}"])
+                    # for_csv_file[line] = line
+
+                    if len(matches)>10:
+                                logger.info(f"Unique match count: {len(matches)}")
+                                return matches, for_csv_file
 
                     """
                         
@@ -235,7 +252,7 @@ def search_files(directory, compiled_patterns):
                                 return matches, for_csv_file
                         
                             break
-                
+                    """
             except Exception as e:
                 logger.error(f"Error reading {filepath}: {e}")
             
