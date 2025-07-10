@@ -9,8 +9,6 @@ from logging.handlers import RotatingFileHandler
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
 from collections import defaultdict
-from codebert_filter import classify_line
-import subprocess
 
 
 BASE_DIR = "/opt/LogWatcher"
@@ -155,6 +153,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
         logger.error(f"Error sending email: {e}")
 
 def search_files(directory, compiled_patterns):
+    from codebert_filter import classify_line
     matches = []
     for_csv_file = {}
     
