@@ -100,7 +100,34 @@ DEBUG_LEVEL = configure_logging()
 def log(message, level=1):
     if DEBUG_LEVEL >= level:
         logger.debug(message)
-        
+
+def download_model():
+    from huggingface_hub import hf_hub_download
+    import os
+    import shutil
+
+    destination_dir = os.path.join(BASE_DIR, "model")
+    os.makedirs(destination_dir, exist_ok=True)
+
+    logger.info(f"Downloading all model files into: {destination_dir}")
+
+    # Download all files from the model repo
+    model_dir = snapshot_download(
+        repo_id="saikat100/cvbert",
+        repo_type="model",
+        local_dir=destination_dir,
+        local_dir_use_symlinks=False  # ensures actual files are copied
+    )
+
+    logger.info("All files downloaded to:", model_dir)
+
+    # Optional: Confirm key files
+    expected = os.path.join(destination_dir, "model.safetensors")
+    if os.path.exists(expected):
+        logger.info("model.safetensors exists.")
+    else:
+        logger.info("model.safetensors not found.")
+
 def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     logger.info("Preparing email header and body")
     hostname = socket.gethostname()
@@ -253,16 +280,14 @@ def load_exclusions():
 
 
 def main_loop():
-    DEFAULT_SCAN_INTERVAL = 600  # fallback
-
-    
-        
+    DEFAULT_SCAN_INTERVAL = 600  # fallback    
 
     while True:
         logger.info(f"Model download frequency is {MODEL_DOWNLOAD_FREQUENCY_MIN} min, checking if model download is needed")
         if (time.time() - LAST_MODEL_DOWNLOAD_TIME) > MODEL_DOWNLOAD_FREQUENCY_MIN:
             logger.info("Need to download the model, calling model_download.py")
-            subprocess.run(["/usr/local/bin/python3.10", "/opt/LogWatcher/model/model_download.py"], check=True)
+            download_model()
+            LAST_MODEL_DOWNLOAD_TIME = time.time()
             logger.info("Model download completed")
         else:
             logger.info("Model download is not required")
