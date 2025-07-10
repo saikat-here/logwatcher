@@ -181,6 +181,8 @@ def search_files(directory, compiled_patterns):
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
         for file in files:
+            log_source_name = file.split("_")[0] # remoing the date time of the log, this can disturn the training.
+            
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
                 continue
@@ -205,7 +207,6 @@ def search_files(directory, compiled_patterns):
                     if excluded:
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
-
                     
                     if classify_line(line) == "false_positive":
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
@@ -213,7 +214,7 @@ def search_files(directory, compiled_patterns):
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
                     email_entry = f"{filepath}:{line_num}:->{line}"
                     matches.append(email_entry)
-                    worksheet.append_row([line,f"[source:{file}] {line}",""])
+                    worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
                     # for_csv_file[line] = line
 
                     if len(matches)>50:
