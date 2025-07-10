@@ -11,6 +11,7 @@ from email.utils import formatdate, make_msgid
 from collections import defaultdict
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import random
 
 BASE_DIR = "/opt/LogWatcher"
 
@@ -178,6 +179,7 @@ def search_files(directory, compiled_patterns):
     worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
 
     for root, _, files in os.walk(directory):
+        random.shuffle(files) 
         for file in files:
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
@@ -214,7 +216,7 @@ def search_files(directory, compiled_patterns):
                     worksheet.append_row([line,f"[source:{file}]{line}",""])
                     # for_csv_file[line] = line
 
-                    if len(matches)>10:
+                    if len(matches)>50:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
 
