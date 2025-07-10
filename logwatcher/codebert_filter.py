@@ -1,6 +1,6 @@
 import os
 import torch
-from safetensors.torch import load_file  # <-- this is the correct way
+from safetensors.torch import load_file  
 from transformers import RobertaTokenizer, RobertaForSequenceClassification
 
 MODEL_NAME = "microsoft/codebert-base"
