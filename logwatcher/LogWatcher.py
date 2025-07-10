@@ -230,7 +230,7 @@ def search_files(directory, compiled_patterns):
                                 log(f"This matching line is already present in the email content; skipping.: '{matched_value}' from {filepath}:{line_num}",2)
                             log(f"Matched by: {pattern_text} in {filepath}:{line_num}", 2)
 
-                            if len(matches)>200:
+                            if len(matches)>100:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
                         
