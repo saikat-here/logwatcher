@@ -209,7 +209,7 @@ def search_files(directory, compiled_patterns):
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
                         continue
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
-                    email_entry = f"{filepath}:{line_num}:{matched_value}->{line}"
+                    email_entry = f"{filepath}:{line_num}:->{line}"
                     matches.append(email_entry)
                     worksheet.append_row([f"[source:{file}]{line}"])
                     # for_csv_file[line] = line
