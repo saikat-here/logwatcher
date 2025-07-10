@@ -279,7 +279,9 @@ def load_exclusions():
 
 
 def main_loop():
-    DEFAULT_SCAN_INTERVAL = 600  # fallback    
+    DEFAULT_SCAN_INTERVAL = 600  # fallback  
+    global LAST_MODEL_DOWNLOAD_TIME
+    global MODEL_DOWNLOAD_FREQUENCY_MIN
 
     while True:
         logger.info(f"Model download frequency is {MODEL_DOWNLOAD_FREQUENCY_MIN} min, checking if model download is needed")
