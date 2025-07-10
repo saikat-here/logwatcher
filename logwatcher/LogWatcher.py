@@ -47,6 +47,11 @@ match_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 logger.addHandler(op_handler)
 match_logger.addHandler(match_handler)
 
+# model download details
+LAST_MODEL_DOWNLOAD_TIME = 0
+MODEL_DOWNLOAD_FREQUENCY_MIN = (1*60)
+
+
 def save_matches_to_csv(matches):
     output_file=f"matched_strings_{time.time()}.csv"
     logger.info(f"Saving the matched strings to CSV")
@@ -248,6 +253,8 @@ def load_exclusions():
 
 def main_loop():
     DEFAULT_SCAN_INTERVAL = 600  # fallback
+
+    
 
     while True:
         start_time = time.time()
