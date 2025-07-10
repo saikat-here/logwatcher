@@ -101,8 +101,8 @@ else
 fi
 
 
-echo "Downloading the model"
-/usr/local/bin/python3.10 /opt/LogWatcher/model/model_download.py
+# echo "Downloading the model"
+# /usr/local/bin/python3.10 /opt/LogWatcher/model/model_download.py
 
 echo "🔧 Making LogWatcher.py executable..."
 sudo chmod +x "$INSTALL_DIR/LogWatcher.py"
