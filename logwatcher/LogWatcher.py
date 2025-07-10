@@ -15,7 +15,7 @@ BASE_DIR = "/opt/LogWatcher"
 
 # model download details
 LAST_MODEL_DOWNLOAD_TIME = 0
-MODEL_DOWNLOAD_FREQUENCY_MIN = (1*60)
+MODEL_DOWNLOAD_FREQUENCY_MIN = 60
 
 # Test mode file count. It will parse 5 files if test mode is set to config
 test_mode_file_count = 10
@@ -285,7 +285,7 @@ def main_loop():
 
     while True:
         logger.info(f"Model download frequency is {MODEL_DOWNLOAD_FREQUENCY_MIN} min, checking if model download is needed")
-        if (time.time() - LAST_MODEL_DOWNLOAD_TIME) > MODEL_DOWNLOAD_FREQUENCY_MIN:
+        if (time.time() - LAST_MODEL_DOWNLOAD_TIME) > (MODEL_DOWNLOAD_FREQUENCY_MIN*60) :
             logger.info("Need to download the model, calling model_download.py")
             download_model()
             LAST_MODEL_DOWNLOAD_TIME = time.time()
