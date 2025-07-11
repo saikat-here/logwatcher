@@ -224,10 +224,10 @@ def search_files(directory, compiled_patterns):
 
                     # Add the matched line in bold
                     matched_line = f"<strong>{lines[line_num - 1].strip()}</strong>"
-                    context += f"\n{matched_line}\n"
+                    context += f"<br/>{matched_line}<br/>"
 
                     # Add lines after the matched one
-                    context += "\n" + "".join(lines[line_num:end]).strip()
+                    context += "<br/>" + "".join(lines[line_num:end]).strip()
 
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     matches.append(email_entry)
@@ -235,7 +235,7 @@ def search_files(directory, compiled_patterns):
                     worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
                     # for_csv_file[line] = line
 
-                    if len(matches)>20:
+                    if len(matches)>3:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
 
