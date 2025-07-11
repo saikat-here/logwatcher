@@ -367,8 +367,7 @@ def main_loop():
                 for file_path, lines in grouped.items():
                     body += f"\n📄 File: {file_path}\n"
                     for line in lines:
-                        body += f"  {line}\n"
-                    body += "\n"
+                        body += f"{line.strip()}\n\n"  # clean block followed by a blank line
                     
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
