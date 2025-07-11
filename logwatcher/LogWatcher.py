@@ -180,7 +180,7 @@ def search_files(directory, compiled_patterns):
     worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
 
     for root, _, files in os.walk(directory):
-        # random.shuffle(files) 
+        random.shuffle(files) 
         for file in files:
             log_source_name = file.replace(".log", "").split("_")[0] # remoing the date time of the log, this can disturn the training.
             
