@@ -347,6 +347,7 @@ def main_loop():
                 match_count = 0
 
                 for match in results:
+                    logger.info("1")
                     if match_count >= MAX_LINES:
                         break
                     try:
@@ -357,21 +358,22 @@ def main_loop():
                         match_count += 1
                     except ValueError:
                         logger.warning(f"Skipping malformed match line: {match}")
-
+                logger.info("2")
                 body = "Following lines flagged by the model:\n\n"
                 for file_path, lines in grouped.items():
+                    logger.info("3")
                     body += f"\n📄 File: {file_path}\n"
                     body += "\n".join(f"  {line}" for line in lines)
                     body += "\n"
                     body += "\n"
-
+                logger.info("4")
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
-
+                logger.info("5")
                 send_email(f'[{datetime.now().strftime("%Y-%m-%d %I:%M%p")}] LogWatcher Alert',body,emails)
             else:
                 match_logger.info(f"No result found to send email")
-                
+        
         elapsed = time.time() - start_time
         logger.info(f"Cycle completed in {elapsed//60} mins.")
 
