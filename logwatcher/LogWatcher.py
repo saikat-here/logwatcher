@@ -137,7 +137,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     sender = f"noreply@{hostname}"
 
     msg = EmailMessage()
-    msg['Subject'] = subject
+    msg['Subject'] = f"[{socket.gethostname()}] {subject}"
     msg['From'] = sender
     msg['To'] = ', '.join(recipients)
     msg['Date'] = formatdate(localtime=True)
