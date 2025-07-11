@@ -215,7 +215,7 @@ def search_files(directory, compiled_patterns):
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
                     email_entry = f"{filepath}:{line_num}:->{line}"
                     matches.append(email_entry)
-                    worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
+                    worksheet.append_row([line,f"[source:{log_source_name}] {line}","",time.time()])
                     # for_csv_file[line] = line
 
                     if len(matches)>20:
