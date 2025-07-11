@@ -147,6 +147,7 @@ def send_email(subject, body, recipients, smtp_server="smtp.commvault.com"):
     msg['X-Priority'] = '3'
     msg['X-Mailer'] = 'Python Email Client'
     msg.set_content(body)
+    msg.add_alternative(body, subtype='html')
     
     logger.info("Email header and body is ready")
         
@@ -217,7 +218,10 @@ def search_files(directory, compiled_patterns):
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
                     start = max(0, line_num - 4)
                     end = min(len(lines), line_num + 3)
-                    context = "".join(lines[start:end]).strip()
+                    # context = "".join(lines[start:end]).strip()
+                    context = "".join(lines[start:line_num-1]).strip()
+                    context += f"<strong>{lines[line_num]).strip()}</strong>"
+                    context += "".join(lines[line_num+1:end]).strip()
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     
                     matches.append(email_entry)
@@ -363,12 +367,13 @@ def main_loop():
                         match_count += 1
                     except ValueError:
                         logger.warning(f"Skipping malformed match line: {match}")
-                body = "Following lines flagged by the model:\n\n"
+                body = "<html><body>"
+                body += "<p><strong>Following lines flagged by the model:</strong></p>"
                 for file_path, lines in grouped.items():
-                    body += f"\n📄 File: {file_path}\n"
+                    body += f"<p>📄 <strong>File: {file_path}</strong><br>"
                     for line in lines:
-                        body += f"{line.strip()}\n\n"  # clean block followed by a blank line
-                    
+                        body += f"{line.strip()}\n\n" 
+                    body += "</p>"
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
                 send_email(f'[{datetime.now().strftime("%Y-%m-%d %I:%M%p")}] LogWatcher Alert',body,emails)
