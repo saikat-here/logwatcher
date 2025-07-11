@@ -218,13 +218,20 @@ def search_files(directory, compiled_patterns):
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
                     start = max(0, line_num - 4)
                     end = min(len(lines), line_num + 3)
-                    # context = "".join(lines[start:end]).strip()
-                    context = "".join(lines[start:line_num-1]).strip()
-                    context += f"<strong>{lines[line_num].strip()}</strong>"
-                    context += "".join(lines[line_num+1:end]).strip()
+
+                    # Collect lines before the matched one
+                    context = "".join(lines[start:line_num - 1]).strip()
+
+                    # Add the matched line in bold
+                    matched_line = f"<strong>{lines[line_num - 1].strip()}</strong>"
+                    context += f"\n{matched_line}\n"
+
+                    # Add lines after the matched one
+                    context += "\n" + "".join(lines[line_num:end]).strip()
+
                     email_entry = f"{filepath}:{line_num}:->{context}"
-                    
                     matches.append(email_entry)
+
                     worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
                     # for_csv_file[line] = line
 
