@@ -378,10 +378,10 @@ def main_loop():
                 body += "<p><strong>Following lines flagged by the model:</strong></p>"
                 for file_path, lines in grouped.items():
                     body += f"<p>📄 <strong>File: {file_path}</strong><br>"
-                    body += "<br/> ---------- Match ---------- <br/>"
                     for line in lines:
+                        body += "<br/> ---------- Match ---------- <br/>"
                         body += f"{line.strip()}\n\n" 
-                    body += "<br/> ---------- Match ---------- <br/>"
+                        body += "<br/> ---------- Match ---------- <br/>"
                     body += "</p>"
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
