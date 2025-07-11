@@ -12,6 +12,7 @@ from collections import defaultdict
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import random
+from datetime import datetime
 
 BASE_DIR = "/opt/LogWatcher"
 
