@@ -366,7 +366,7 @@ def main_loop():
                 body = "Following lines flagged by the model:\n\n"
                 for file_path, lines in grouped.items():
                     body += f"\n📄 File: {file_path}\n"
-                    body += "\n".join(f"  {line}" for line in lines).join("\n")
+                    body += "\n \n".join(f"  {line}" for line in lines)
                     body += "\n"
                     body += "\n"
                 if len(results) > MAX_LINES:
