@@ -211,6 +211,7 @@ def search_files(directory, compiled_patterns):
                     if classify_line(line) == "false_positive":
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
                         continue
+                        
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
                     email_entry = f"{filepath}:{line_num}:->{line}"
                     matches.append(email_entry)
