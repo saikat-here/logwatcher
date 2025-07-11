@@ -375,6 +375,7 @@ def main_loop():
         elapsed = time.time() - start_time
         logger.info(f"Cycle completed in {elapsed//60} mins.")
 
+        logger.info(f"Sleeping for {SCAN_INTERVAL} mins")
         time.sleep(SCAN_INTERVAL)
 
 if __name__ == "__main__":
