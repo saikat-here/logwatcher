@@ -366,9 +366,10 @@ def main_loop():
                 body = "Following lines flagged by the model:\n\n"
                 for file_path, lines in grouped.items():
                     body += f"\n📄 File: {file_path}\n"
-                    body += "\n \n".join(f"  {line}" for line in lines)
+                    for line in lines:
+                        body += f"  {line}\n"
                     body += "\n"
-                    body += "\n"
+                    
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
                 send_email(f'[{datetime.now().strftime("%Y-%m-%d %I:%M%p")}] LogWatcher Alert',body,emails)
