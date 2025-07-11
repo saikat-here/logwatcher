@@ -220,7 +220,7 @@ def search_files(directory, compiled_patterns):
                     end = min(len(lines), line_num + 3)
                     # context = "".join(lines[start:end]).strip()
                     context = "".join(lines[start:line_num-1]).strip()
-                    context += f"<strong>{lines[line_num]).strip()}</strong>"
+                    context += f"<strong>{lines[line_num].strip()}</strong>"
                     context += "".join(lines[line_num+1:end]).strip()
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     
