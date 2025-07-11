@@ -201,7 +201,8 @@ def search_files(directory, compiled_patterns):
                 log(f"Opening file: {filepath}",2) 
                 with open(filepath, 'r', errors='ignore') as f:
                  log("File opened successfully",2)
-                 for line_num, line in enumerate(f, 1):
+                 lines = f.readlines()
+                 for line_num, line in enumerate(lines, 1):
                     log(f"Checking line for exclusion: '{line.strip()}' against exclusions: {exclusions}",2)
                     excluded = any(ex.lower() in line.lower() for ex in exclusions)
                     
@@ -214,7 +215,11 @@ def search_files(directory, compiled_patterns):
                         continue
                         
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
-                    email_entry = f"{filepath}:{line_num}:->{line}"
+                    start = max(0, line_num - 4)
+                    end = min(len(lines), line_num + 3)
+                    context = "".join(lines[start:end]).strip()
+                    email_entry = f"{filepath}:{line_num}:->{context}"
+                    
                     matches.append(email_entry)
                     worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
                     # for_csv_file[line] = line
@@ -361,7 +366,7 @@ def main_loop():
                 body = "Following lines flagged by the model:\n\n"
                 for file_path, lines in grouped.items():
                     body += f"\n📄 File: {file_path}\n"
-                    body += "\n".join(f"  {line}" for line in lines)
+                    body += "\n".join(f"  {line}" for line in lines).join("\n")
                     body += "\n"
                     body += "\n"
                 if len(results) > MAX_LINES:
