@@ -182,7 +182,6 @@ def search_files(directory, compiled_patterns):
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
         for file in files:
-            file = "Alerts.log"
             log_source_name = file.replace(".log", "").split("_")[0] # remoing the date time of the log, this can disturn the training.
             
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
