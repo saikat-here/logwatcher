@@ -219,15 +219,15 @@ def search_files(directory, compiled_patterns):
                     start = max(0, line_num - 4)
                     end = min(len(lines), line_num + 3)
 
-                    # Collect lines before the matched one
-                    context = "".join(lines[start:line_num - 1]).strip()
+                    # Collect lines before the matched one (lines[start] to lines[line_num - 2])
+                    context = "<br/>".join(line.strip() for line in lines[start:line_num - 1])
 
                     # Add the matched line in bold
                     matched_line = f"<strong>{lines[line_num - 1].strip()}</strong>"
-                    context += f"<br/>{matched_line}<br/>"
+                    context += f"<br/>{matched_line}"
 
-                    # Add lines after the matched one
-                    context += "<br/>" + "".join(lines[line_num:end]).strip()
+                    # Add lines after the matched one (lines[line_num] to lines[end - 1])
+                    context += "<br/>" + "<br/>".join(line.strip() for line in lines[line_num:end])
 
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     matches.append(email_entry)
