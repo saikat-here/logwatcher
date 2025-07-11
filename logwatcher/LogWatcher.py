@@ -367,7 +367,7 @@ def main_loop():
                 if len(results) > MAX_LINES:
                     body += f"\n⚠️ Only the first {MAX_LINES} matches are shown (out of {len(results)}). Please check {MATCH_LOG_FILE} log or {CSV_DIR}for complete result."
 
-                send_email("LogWatcher Alert", body, emails)
+                send_email(f"[{datetime.now().strftime("%Y-%m-%d %I:%M%p")}] LogWatcher Alert", body, emails)
 
         elapsed = time.time() - start_time
         logger.info(f"Cycle completed in {elapsed//60} mins.")
