@@ -184,6 +184,7 @@ def search_files(directory, compiled_patterns):
         random.shuffle(files) 
         for file in files:
             log_source_name = file.replace(".log", "").split("_")[0] # remoing the date time of the log, this can disturn the training.
+            log_source_name = log_source_name.split(".")[0]  # removing name.5 from log name.
             
             if file.endswith(('.zip', '.bz2', '.gz', '.xz', '.7z', '.tar', '.rar')):
                 logger.info(f"Skipping compressed file: {file}")
@@ -211,7 +212,7 @@ def search_files(directory, compiled_patterns):
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
                     
-                    if classify_line(line) == "false_positive":
+                    if classify_line(f"[source:{log_source_name}] {line}") == "false_positive":
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
                         continue
                         
