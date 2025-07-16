@@ -64,9 +64,14 @@ echo "📁 Creating MODEL directory..."
 sudo mkdir -p "$MODEL_DIR"
 
 
+echo "🔍 Checking if $SERVICE_NAME service exists before stopping..."
+if systemctl list-unit-files | grep -q "^$SERVICE_NAME.service"; then
+    echo "🛑 Stopping existing $SERVICE_NAME service..."
+    sudo systemctl stop "$SERVICE_NAME"
+else
+    echo "ℹ️ No existing $SERVICE_NAME service found. Skipping service stop."
+fi
 
-echo "Stoping service to apply updates..."
-sudo systemctl stop "$SERVICE_NAME"
 
 echo "📄 Copying files (preserving config.txt if present)..."
 for file in "$CLONE_DIR/logwatcher/"*; do
