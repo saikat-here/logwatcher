@@ -182,7 +182,8 @@ def search_files(directory, compiled_patterns):
 
 
     # Authenticate to GCP
-    creds = ServiceAccountCredentials.from_json_keyfile_name("cv-logwatcher-project-gcp.json", scope)
+    gauth_file = os.path.join(BASE_DIR, "cv-logwatcher-project-gcp.json") 
+    creds = ServiceAccountCredentials.from_json_keyfile_name(gauth_file, scope)
     client = gspread.authorize(creds)
     # Open the Google Sheet
     spreadsheet = client.open("log-labels") 
