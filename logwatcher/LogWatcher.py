@@ -116,7 +116,7 @@ def download_model():
     logger.info("Deleting all the files from model directory")
 
     for filename in os.listdir(destination_dir):
-        file_path = os.path.join(folder_path, filename)
+        file_path = os.path.join(destination_dir, filename)
         if os.path.isfile(file_path):
             logger.info(f"Removing: {file_path}")
             os.remove(file_path)
