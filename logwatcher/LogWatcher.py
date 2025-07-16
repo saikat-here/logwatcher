@@ -113,6 +113,14 @@ def download_model():
     destination_dir = os.path.join(BASE_DIR, "model")
     os.makedirs(destination_dir, exist_ok=True)
 
+    logger.info("Deleting all the files from model directory")
+
+    for filename in os.listdir(destination_dir):
+        file_path = os.path.join(folder_path, filename)
+        if os.path.isfile(file_path):
+            logger.info(f"Removing: {file_path}")
+            os.remove(file_path)
+
     logger.info(f"Downloading all model files into: {destination_dir}")
 
     # Download all files from the model repo
