@@ -221,7 +221,7 @@ def search_files(directory, compiled_patterns):
                             log(f"Matched line is part of the exclusion list. {filepath}:{line_num}:{line}", 2)
                             continue
                     
-                    if classify_line(f"[source:{log_source_name}] {line}") == "false_positive":
+                    if classify_line(line) == "false_positive":
                         log(f"CodeBERT marked as SAFE. Full Line: {line}", 2)
                         continue
                         
@@ -242,7 +242,7 @@ def search_files(directory, compiled_patterns):
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     matches.append(email_entry)
 
-                    worksheet.append_row([line,f"[source:{log_source_name}] {line}",""])
+                    worksheet.append_row([line,line,""])
                     # for_csv_file[line] = line
 
                     if len(matches)>10:
