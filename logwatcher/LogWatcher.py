@@ -189,7 +189,8 @@ def search_files(directory, compiled_patterns):
     gauth_file = os.path.join(BASE_DIR, "cv-logwatcher-project-gcp.json")
     share_log = load_config().get("share_logs_for_training", "0").strip()
     
-    if (share_log==1) and os.path.exists(gauth_file):
+    if (share_log=="1") and os.path.exists(gauth_file):
+        logger.info("Log sharing is enabled")
         creds = ServiceAccountCredentials.from_json_keyfile_name(gauth_file, scope)
         client = gspread.authorize(creds)
         # Open the Google Sheet
