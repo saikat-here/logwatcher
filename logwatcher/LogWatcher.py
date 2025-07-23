@@ -198,6 +198,9 @@ def search_files(directory, compiled_patterns):
         worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
     else:
         logger.info("Log sharing for training is not enabled or GCP auth file does not exists")
+    logger.info(share_log)
+    logger.info(gauth_file)
+    logger.info(os.path.exists(gauth_file))
         
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
