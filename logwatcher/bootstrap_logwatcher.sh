@@ -16,7 +16,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-
+"""
 echo "Installing and configuring Python3.10 and related packages"
 sudo yum groupinstall "Development Tools" -y
 sudo yum install gcc openssl-devel bzip2-devel libffi-devel wget make -y
@@ -29,6 +29,7 @@ sudo make altinstall
 sudo /usr/local/bin/python3.10 -m ensurepip
 sudo /usr/local/bin/python3.10 -m pip install --upgrade pip
 sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn safetensors gspread oauth2client huggingface_hub
+"""
 
 echo "Deleting the existing model directory"
 rm -rf $MODEL_DIR
@@ -170,6 +171,6 @@ echo ""
 echo "🔁 Changes apply automatically on the next scan cycle."
 echo "=========================================================="
 
-echo -e "\033[31m Important!! By default, it parses all files in the /var/log directory. You can customize this by updating the path in the configuration file located at /opt/LogWatcher/config.txt to match your application-specific log directory \033[0m"
-
+echo -e "\033[31m 1. Important!! By default, it parses all files in the /var/log directory. You can customize this by updating the path in the configuration file located at /opt/LogWatcher/config.txt to match your application-specific log directory \033[0m"
+echo -e "\033[31m 2. Important!! Update /opt/LogWatcher/config.txt file with your email to receive email alerts \033[0m"
 
