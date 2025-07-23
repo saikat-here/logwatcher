@@ -114,8 +114,11 @@ def download_model():
     os.makedirs(destination_dir, exist_ok=True)
 
     logger.info("Deleting all the files from model directory")
+    file_list = os.listdir(destination_dir)
+    logger.info("Will delete following files")
+    logger.info(str(file_list))
 
-    for filename in os.listdir(destination_dir):
+    for filename in file_list:
         file_path = os.path.join(destination_dir, filename)
         if os.path.isfile(file_path):
             logger.info(f"Removing: {file_path}")
