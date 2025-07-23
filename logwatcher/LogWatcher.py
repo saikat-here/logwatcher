@@ -193,7 +193,7 @@ def search_files(directory, compiled_patterns):
         spreadsheet = client.open("log-labels") 
         worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
     else:
-        logger.info("GCP auth file does not exists")
+        logger.info("Log sharing for training is not enabled or GCP auth file does not exists")
         
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
