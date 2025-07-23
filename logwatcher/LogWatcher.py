@@ -188,7 +188,10 @@ def search_files(directory, compiled_patterns):
     worksheet= None
     gauth_file = os.path.join(BASE_DIR, "cv-logwatcher-project-gcp.json")
     share_log = load_config().get("share_logs_for_training", "0").strip()
-    
+    logger.info(f"Is log sharing enabled for training ? {share_log}")
+    logger.info(f"GCP auth file location: {gauth_file}")
+    logger.info(f"Is GCP auth file available: {os.path.exists(gauth_file)}")
+
     if (share_log=="1") and os.path.exists(gauth_file):
         logger.info("Log sharing is enabled")
         creds = ServiceAccountCredentials.from_json_keyfile_name(gauth_file, scope)
@@ -198,9 +201,7 @@ def search_files(directory, compiled_patterns):
         worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
     else:
         logger.info("Log sharing for training is not enabled or GCP auth file does not exists")
-    logger.info(share_log)
-    logger.info(gauth_file)
-    logger.info(os.path.exists(gauth_file))
+
         
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
