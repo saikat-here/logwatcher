@@ -250,13 +250,12 @@ def search_files(directory, compiled_patterns):
 
                     if share_log == 1 and  worksheet:
                         worksheet.append_row([line,line,""])
-                    # for_csv_file[line] = line
+                    for_csv_file[line] = line
 
+                    """
                     if len(matches)>10:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
-
-                    """
                         
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
