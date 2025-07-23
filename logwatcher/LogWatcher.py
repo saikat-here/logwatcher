@@ -182,13 +182,19 @@ def search_files(directory, compiled_patterns):
 
 
     # Authenticate to GCP
-    gauth_file = os.path.join(BASE_DIR, "cv-logwatcher-project-gcp.json") 
-    creds = ServiceAccountCredentials.from_json_keyfile_name(gauth_file, scope)
-    client = gspread.authorize(creds)
-    # Open the Google Sheet
-    spreadsheet = client.open("log-labels") 
-    worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
-
+    worksheet= None
+    gauth_file = os.path.join(BASE_DIR, "cv-logwatcher-project-gcp.json")
+    share_log = load_config().get("share_logs_for_training", "0").strip()
+    
+    if (share_log==1) and os.path.exists(gauth_file):
+        creds = ServiceAccountCredentials.from_json_keyfile_name(gauth_file, scope)
+        client = gspread.authorize(creds)
+        # Open the Google Sheet
+        spreadsheet = client.open("log-labels") 
+        worksheet = spreadsheet.sheet1  # Or use .worksheet("Sheet1")
+    else:
+        logger.info("GCP auth file does not exists")
+        
     for root, _, files in os.walk(directory):
         random.shuffle(files) 
         for file in files:
@@ -242,7 +248,8 @@ def search_files(directory, compiled_patterns):
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     matches.append(email_entry)
 
-                    worksheet.append_row([line,line,""])
+                    if share_log == 1 and  worksheet:
+                        worksheet.append_row([line,line,""])
                     # for_csv_file[line] = line
 
                     if len(matches)>10:
