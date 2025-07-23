@@ -256,7 +256,8 @@ def search_files(directory, compiled_patterns):
                     email_entry = f"{filepath}:{line_num}:->{context}"
                     matches.append(email_entry)
 
-                    if share_log == 1 and  worksheet:
+                    if share_log == "1" and  worksheet:
+                        log("Writing to Google Sheet",1)
                         worksheet.append_row([line,line,""])
                     for_csv_file[line] = line
 
