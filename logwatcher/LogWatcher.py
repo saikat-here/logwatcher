@@ -240,21 +240,22 @@ def search_files(directory, compiled_patterns):
                         continue
                         
                     log(f"CodeBERT marked as UNSAFE. Full Line: {line}", 1)
-                    start = max(0, line_num - 4)
-                    end = min(len(lines), line_num + 3)
+                    if line not in matches :
+                        start = max(0, line_num - 4)
+                        end = min(len(lines), line_num + 3)
 
-                    # Collect lines before the matched one (lines[start] to lines[line_num - 2])
-                    context = "<br/>".join(line.strip() for line in lines[start:line_num - 1])
+                        # Collect lines before the matched one (lines[start] to lines[line_num - 2])
+                        context = "<br/>".join(line.strip() for line in lines[start:line_num - 1])
 
-                    # Add the matched line in bold
-                    matched_line = f"<strong>{lines[line_num - 1].strip()}</strong>"
-                    context += f"<br/>{matched_line}"
+                        # Add the matched line in bold
+                        matched_line = f"<strong>{lines[line_num - 1].strip()}</strong>"
+                        context += f"<br/>{matched_line}"
 
-                    # Add lines after the matched one (lines[line_num] to lines[end - 1])
-                    context += "<br/>" + "<br/>".join(line.strip() for line in lines[line_num:end])
+                        # Add lines after the matched one (lines[line_num] to lines[end - 1])
+                        context += "<br/>" + "<br/>".join(line.strip() for line in lines[line_num:end])
 
-                    email_entry = f"{filepath}:{line_num}:->{context}"
-                    matches.append(email_entry)
+                        email_entry = f"{filepath}:{line_num}:->{context}"
+                        matches.append(email_entry)
 
                     if share_log == "1" and  worksheet:
                         log("Writing to Google Sheet",1)
