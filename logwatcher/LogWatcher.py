@@ -259,7 +259,7 @@ def search_files(directory, compiled_patterns):
 
                     if share_log == "1" and  worksheet:
                         log("Writing to Google Sheet",1)
-                        worksheet.append_row([line,line,""])
+                        worksheet.append_row([line.strip(),"",""])
                     for_csv_file[line] = line
 
                     """
