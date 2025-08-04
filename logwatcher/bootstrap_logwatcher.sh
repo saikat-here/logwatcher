@@ -17,18 +17,18 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
-echo "Installing and configuring Python3.10 and related packages"
-sudo yum groupinstall "Development Tools" -y
-sudo yum install gcc openssl-devel bzip2-devel libffi-devel wget make -y
-cd /usr/src
-sudo wget https://www.python.org/ftp/python/3.10.14/Python-3.10.14.tgz
-sudo tar xzf Python-3.10.14.tgz
-cd Python-3.10.14
-sudo ./configure --enable-optimizations
-sudo make altinstall
-sudo /usr/local/bin/python3.10 -m ensurepip
-sudo /usr/local/bin/python3.10 -m pip install --upgrade pip
-sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn safetensors gspread oauth2client huggingface_hub
+#echo "Installing and configuring Python3.10 and related packages"
+#sudo yum groupinstall "Development Tools" -y
+#sudo yum install gcc openssl-devel bzip2-devel libffi-devel wget make -y
+#cd /usr/src
+#sudo wget https://www.python.org/ftp/python/3.10.14/Python-3.10.14.tgz
+#sudo tar xzf Python-3.10.14.tgz
+#cd Python-3.10.14
+#sudo ./configure --enable-optimizations
+#sudo make altinstall
+#sudo /usr/local/bin/python3.10 -m ensurepip
+#sudo /usr/local/bin/python3.10 -m pip install --upgrade pip
+#sudo /usr/local/bin/python3.10 -m pip install transformers torch scikit-learn safetensors gspread oauth2client huggingface_hub
 
 
 echo "Deleting the existing model directory"
