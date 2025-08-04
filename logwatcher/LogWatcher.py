@@ -262,11 +262,11 @@ def search_files(directory, compiled_patterns):
                         worksheet.append_row([line.strip(),"",""])
                     for_csv_file[line] = line
 
-                    """
+                    
                     if len(matches)>10:
                                 logger.info(f"Unique match count: {len(matches)}")
                                 return matches, for_csv_file
-                        
+                    """    
                     for pattern, pattern_text in compiled_patterns:
                         log(f"Pattern: {pattern}",3)
                         log(f"pattern_text: {pattern_text}",3)
